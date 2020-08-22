@@ -92,16 +92,18 @@ return function()
 	Server.ProcessCommand = function(plr, str)
 		local Arguments = Service.Split(str, Config.Deliminator)
 		local CommandText = table.remove(Arguments, 1) or ""
+		CommandText = CommandText:gsub("%s", "")
 		local SelectedCommand
 		
 		plr = Service.PlayerWrapper(plr)
 		
 		for _,Command in pairs(Commands.Commands) do
 			local Prefix = Command.Prefix or DefaultPrefix
+
 			if Prefix .. lower(Command.Name) == lower(CommandText) then
 				SelectedCommand = Command
 			else
-				for _,Alias in ipairs(Command.Aliases or {}) do
+				for _,Alias in pairs(Command.Aliases or {}) do
 					if Prefix .. lower(Alias) == lower(CommandText) then
 						SelectedCommand = Command
 					end
