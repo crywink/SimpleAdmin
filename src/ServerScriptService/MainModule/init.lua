@@ -1,74 +1,30 @@
 --[[
-	SimpleAdmin | Initialization
-		- Unpack everything and place it where it should go
-		- Run all init variations
+
+   _____ _                 _                  _           _       
+  / ____(_)               | |        /\      | |         (_)      
+ | (___  _ _ __ ___  _ __ | | ___   /  \   __| |_ __ ___  _ _ __  
+  \___ \| | '_ ` _ \| '_ \| |/ _ \ / /\ \ / _` | '_ ` _ \| | '_ \ 
+  ____) | | | | | | | |_) | |  __// ____ \ (_| | | | | | | | | | |
+ |_____/|_|_| |_| |_| .__/|_|\___/_/    \_\__,_|_| |_| |_|_|_| |_|
+                    | |                                           
+                    |_|                                           
+
+	Hey, I'm Sam! (aka crywink)
+	
+	I've been a developer on Roblox for a pretty long time now. Since I first opened studio, I remember my first place was just a testing place
+	for a popular admin suite called Adonis. It's an extremely extensive script that lets you manage your game from your game with ease. I began
+	to start working on the github repo for Adonis, creating pull requests with bug fixes and feature additions. I've finally decided that now, I'm
+	at the point where I think I'm ready to take on my own admin system. Lone behold, SimpleAdmin.
+	
+	The primary goal of SimpleAdmin is, well, to be simple, really. It's supposed to tackle the things that the pre-existing scripts alike failed
+	to. This being features like a nice looking UI, while also being easy to customize, configure, and build onto.
+	
+	This project was also to help me learn more about programming, so I decided to try a bunch of stuff I don't really do often. If
+	it seems non-optimal, impractical, or completely broken, let me know and I will fix accordingly.
 --]]
 
--- Services
-
--- Variables
-local SimpleAdmin = _G.SimpleAdmin
-local Packages = SimpleAdmin:WaitForChild("Packages")
-local Container = script.Parent
-local Shared = Container:WaitForChild("Shared")
-local Server = Container:WaitForChild("Server")
-local Client = Container:WaitForChild("Client")
-local Environment = require(Server:WaitForChild("Dependencies"):WaitForChild("Environment"))
-Environment.Init()
-
--- Module
-return function(Config)
-	Server.Parent = game:GetService("ServerScriptService")
-	for _,v in pairs(game:GetService("Players"):GetPlayers()) do
-		Client:Clone().Parent = v:WaitForChild("PlayerGui")
-	end
-	Client.Parent = game:GetService("StarterPlayer").StarterPlayerScripts
-	Shared.Parent = game:GetService("ReplicatedStorage")
-	Environment.DefaultEnvironment.Config = Config
+return function(Config) -- This function initializes the admin and sets everything in place.
+	require(script:WaitForChild("Init"))(Config)
 	
-	for _,v in pairs(Packages:WaitForChild("Server"):GetChildren()) do
-		if v:IsA("ModuleScript") then
-			v.Parent = Server.Core
-		end
-	end
-	
-	for _,v in pairs(Packages:WaitForChild("Client"):GetChildren()) do
-		if v:IsA("ModuleScript") then
-			v.Parent = Client.Core
-		end
-	end
-	
-	for _,Directory in pairs({Shared,Server,Client}) do
-		if Directory == Server then
-			local Dependencies = Directory:WaitForChild("Dependencies")
-			local Core = Directory:WaitForChild("Core")
-			local Handler = Directory:WaitForChild("Main")
-			
-			if Handler then
-				Handler = require(Handler)
-				if type(Handler) == "function" then
-					Environment.Apply(Handler)()
-				end
-			end
-			
-			if Core then
-				for _,v in pairs(Core:GetChildren()) do
-					if v:IsA("ModuleScript") then
-						local mod = require(v)
-						if type(mod) == "table" and mod.Init then
-							Environment.Apply(mod.Init)()
-						elseif type(mod) == "function" then
-							Environment.Apply(mod)()
-						end
-					end
-				end
-			end
-		elseif Directory == Shared then
-			local Network = require(Directory:WaitForChild("Network"))
-			Environment.DefaultEnvironment.Shared.Network = Network
-			Environment.Apply(Network.Init)()
-		end
-	end
-	
-	script:Destroy()
+	return true
 end
