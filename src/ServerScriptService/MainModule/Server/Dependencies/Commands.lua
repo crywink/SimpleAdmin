@@ -1527,7 +1527,29 @@ return function()
 					plr.Send("Message", "You must be holding a tool to do that!")
 				end
 			end
-		}
+		},
+		{
+			Name = "RemoveHats";
+			Level = Levels.Moderators;
+			Category = "Utility";
+			Args = {
+				{
+					Name = "Target";
+					Type = "player";
+				}
+			};
+			Run = function(plr, args)
+				if not args.Target.Character then
+					return
+				end
+
+				for _,v in pairs(args.Target.Character:GetDescendants()) do
+					if v:IsA("Accessory") then
+						v:Destroy()
+					end
+				end
+			end
+		},
 	}
 	
 	Commands.Get = function(query, includeindex)
