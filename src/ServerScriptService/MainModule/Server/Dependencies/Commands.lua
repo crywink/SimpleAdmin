@@ -1550,6 +1550,36 @@ return function()
 				end
 			end
 		},
+		{
+			Name = "UnCrowd";
+			Aliases = {"decrowd", "pushaway"};
+			Level = Levels.Moderators;
+			Category = "Utility";
+			Args = {
+				{
+					Name = "Target";
+					Type = "player";
+				},
+				{
+					Name = "Radius";
+					Type = "int";
+				}
+			};
+			Run = function(plr, args)
+				if plr == args.Target or not args.Target.Character or not plr.Character then
+					return
+				end
+
+				local Char = plr.Character	
+				local CharCF = Char:GetPrimaryPartCFrame()
+
+				local TargetChar = args.Target.Character
+				local TargetCharCF = TargetChar:GetPrimaryPartCFrame()
+
+				local EndPos = (TargetCharCF.Position - CharCF.Position).Unit * args.Radius
+				TargetChar:SetPrimaryPartCFrame(CFrame.new(EndPos.X, TargetCharCF.Y, EndPos.Z))
+			end
+		}
 	}
 	
 	Commands.Get = function(query, includeindex)
