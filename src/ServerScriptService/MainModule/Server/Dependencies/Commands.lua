@@ -1576,8 +1576,10 @@ return function()
 				local TargetChar = args.Target.Character
 				local TargetCharCF = TargetChar:GetPrimaryPartCFrame()
 
-				local EndPos = (TargetCharCF.Position - CharCF.Position).Unit * args.Radius
-				TargetChar:SetPrimaryPartCFrame(CFrame.new(EndPos.X, TargetCharCF.Y, EndPos.Z))
+				if (args.Target:DistanceFromCharacter(CharCF.Position) <= args.Radius) then
+					local EndPos = (TargetCharCF.Position - CharCF.Position).Unit * args.Radius
+					TargetChar:SetPrimaryPartCFrame(CFrame.new(EndPos.X, TargetCharCF.Y, EndPos.Z))
+				end
 			end
 		}
 	}
