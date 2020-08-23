@@ -37,8 +37,8 @@ return function()
 		--[[
 			Checks if the server is locked and will kick if player isn't a moderator
 		--]]
-		if Server.ServerLocked and Service.GetPermissionLevel(plr) < Service.AdminLevels.Moderators then
-			plr:Kick("| SimpleAdmin |\n\nThis server is locked!\nReason: " .. Server.ServerLocked)
+		if Server.ServerLock and Service.GetPermissionLevel(plr) < Service.AdminLevels.Moderators then
+			plr:Kick("| SimpleAdmin |\n\nThis server is locked!\nReason: " .. Server.ServerLock)
 			return
 		end
 		
