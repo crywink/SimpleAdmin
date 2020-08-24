@@ -1572,7 +1572,7 @@ return function()
 
 				local Char = plr.Character	
 				local CharCF = Char:GetPrimaryPartCFrame()
-
+				
 				local TargetChar = args.Target.Character
 				local TargetCharCF = TargetChar:GetPrimaryPartCFrame()
 
@@ -1580,6 +1580,42 @@ return function()
 					local EndPos = (TargetCharCF.Position - CharCF.Position).Unit * args.Radius
 					TargetChar:SetPrimaryPartCFrame(CFrame.new(EndPos.X, TargetCharCF.Y, EndPos.Z))
 				end
+			end
+		},
+		{
+			Name = "AddStat";
+			Aliases = {"newstat"};
+			Level = Levels.Moderators;
+			Args = {
+				{
+					Name = "Target";
+					Type = "player";
+				},
+				{
+					Name = "Name";
+					Type = "string";
+				},
+				{
+					Name = "Value";
+					Type = "string";
+				}
+			};
+			Run = function(plr, args)
+				local leaderstats = args.Target:FindFirstChild("leaderstats")
+				if not leaderstats then
+					leaderstats = Instance.new("Folder")
+					leaderstats.Name = "leaderstats"
+					leaderstats.Parent = args.Target._Object
+				end
+
+				if leaderstats:FindFirstChild(args.Name) then
+					return plr.Send("Message", "A leaderstat with name '" .. args.Name .. "' already exists.")
+				end
+
+				local stat = Instance.new("StringValue")
+				stat.Name = args.Name;
+				stat.Value = args.Value;
+				stat.Parent = leaderstats;
 			end
 		}
 	}
