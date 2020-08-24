@@ -160,6 +160,8 @@ Service.PlayerWrapper = function(plr)
 	
 	if not Service.PlayerWrappers[plr] then
 		Service.PlayerWrappers[plr] = Environment.AddCustomProperties(plr, {
+			Created = tick();
+			
 			Data = Data.Cache[plr];
 			Temp = {};
 			

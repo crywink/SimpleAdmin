@@ -24,7 +24,7 @@
 --]]
 
 return function(Config) -- This function initializes the admin and sets everything in place.
-	require(script:WaitForChild("Init"))(Config)
+	require(script:WaitForChild("Unpack"))(Config)
 	
 	return true
 end
