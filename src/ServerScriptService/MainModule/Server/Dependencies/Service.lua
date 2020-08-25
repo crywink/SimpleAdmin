@@ -275,6 +275,10 @@ Service.PcallReturn = function(func, default)
 	return Success and Data or default
 end
 
+Service.RoundTo = function(Number, Place)
+	return math.floor(Number * (10 ^ Place)) / 10 ^ Place
+end
+
 Service.ResolveToUserId = function(query)
 	local UserID = tonumber(query) or Service.PcallReturn(function()
 		return Players:GetUserIdFromNameAsync(query)
