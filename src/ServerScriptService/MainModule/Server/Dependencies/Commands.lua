@@ -570,7 +570,9 @@ return function()
 			Run = function(plr, args)
 				local LogTable = {}
 				for k,v in ipairs(Logs.Get("Chat") or {}) do
-					table.insert(LogTable, v.Player .. " - " .. v.Message)
+					if v.Player and v.Message then
+						table.insert(LogTable, v.Player .. " - " .. v.Message)
+					end
 				end
 				
 				plr.Send("DisplayTable", "Chat Logs", LogTable)
@@ -1412,21 +1414,6 @@ return function()
 			end
 		},
 		{
-			Name = "PlayerData";
-			Level = Levels.Moderators;
-			Category = "Utility";
-			Aliases = {"pdata", "pinfo"};
-			Args = {
-				{
-					Name = "Target";
-					Type = "player";
-				}
-			};
-			Run = function(plr, args)
-				
-			end
-		},
-		{
 			Name = "PlaySound";
 			Level = Levels.Moderators;
 			Category = "Music";
@@ -1609,13 +1596,81 @@ return function()
 				end
 
 				if leaderstats:FindFirstChild(args.Name) then
-					return plr.Send("Message", "A leaderstat with name '" .. args.Name .. "' already exists.")
+					return --plr.Send("Message", "A leaderstat with name '" .. args.Name .. "' already exists.")
 				end
 
 				local stat = Instance.new("StringValue")
 				stat.Name = args.Name;
 				stat.Value = args.Value;
 				stat.Parent = leaderstats;
+			end
+		},
+		{
+			Name = "playerdata";
+			Level = Levels.Moderators;
+			Args = {
+				{
+					Name = "Target";
+					Type = "player";
+				}
+			};
+			Category = "Utility";
+			Run = function(plr, args)
+				plr.Send("DisplayPlayerData", args.Target._Object)
+			end
+		},
+		{
+			Name = "PlayerChatLogs";
+			Level = Levels.Moderators;
+			Aliases = {"pclogs", "pchatlogs"};
+			Args = {
+				{
+					Name = "Target";
+					Type = "player";
+				}
+			};
+			Category = "Utility";
+			Run = function(plr, args)
+				if plr.GetLevel() < Levels.Moderators then return end
+
+				local LogTable = {}
+				for k,v in ipairs(Logs.Get("Chat") or {}) do
+					if v.Player == args.Target.Name then
+						table.insert(LogTable, v.Player .. " - " .. v.Message)
+					end
+				end
+				
+				if #LogTable > 0 then
+					plr.Send("DisplayTable", "Chat Logs for " .. args.Target.Name, LogTable)
+				else
+					plr.Send("Message", "This player has no chat logs.")
+				end
+			end
+		},
+		{
+			Name = "PlayerLogs";
+			Aliases = {"plogs"};
+			Level = Levels.Moderators;
+			Args = {
+				{
+					Name = "Target";
+					Type = "player";
+				}
+			};
+			Category = "Utility";
+			Run = function(plr, args)
+				local LogTable = {}
+				for k,v in ipairs(Logs.Get("Main")) do
+					if args.Target.Name == v.Player then
+						table.insert(LogTable, v.Player .. " - " .. v.Command)
+					end
+				end
+				
+				if #LogTable > 0 then
+					plr.Send("DisplayTable", "Logs for " .. args.Target.Name, LogTable)
+				else
+					plr.Send("Message", "This player has no admin logs.")
+				end
 			end
 		}
 	}
