@@ -25,10 +25,10 @@ return function()
 	end
 	
 	Server.ResolveToPlayers = function(Player, String, Wrap, DisableShortcuts)
-		local StringLower = lower(String)
+		local StringLower = lower(String):gsub("%s","")
 		local Wrapper = Service.PlayerWrapper(Player)
 		local Return
-		
+			
 		if StringLower == "me" then
 			Return = Player
 		elseif StringLower == "others" then
