@@ -26,6 +26,10 @@ Text.New = function(Data)
 	return self
 end
 
+Text.SetText = function(self, text)
+	self.Object.Title.Text = text
+end
+
 Text.UpdateSize = function(self)
 	self.Object.Size = UDim2.new(1, 0, 0, self.Object.Title.TextBounds.Y + 12)
 end

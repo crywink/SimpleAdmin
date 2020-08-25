@@ -160,6 +160,8 @@ Service.PlayerWrapper = function(plr)
 	
 	if not Service.PlayerWrappers[plr] then
 		Service.PlayerWrappers[plr] = Environment.AddCustomProperties(plr, {
+			Created = tick();
+			
 			Data = Data.Cache[plr];
 			Temp = {};
 			
@@ -271,6 +273,10 @@ Service.PcallReturn = function(func, default)
 	local Success, Data = pcall(func)
 	
 	return Success and Data or default
+end
+
+Service.RoundTo = function(Number, Place)
+	return math.floor(Number * (10 ^ Place)) / 10 ^ Place
 end
 
 Service.ResolveToUserId = function(query)

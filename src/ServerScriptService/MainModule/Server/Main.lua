@@ -15,18 +15,6 @@ return function()
 		local Wrapper = Service.PlayerWrapper(plr)
 		
 		--[[
-			Preventing Name Spoofing
-		--]]
-		if not Config.DisableAntiNameSpoofing then
-			pcall(function()
-				local UserData = Service.UserService:GetUserInfosByUserIdsAsync({plr.UserId})
-				if UserData[1].Id == plr.UserId and UserData[1].Username ~= plr.Name then
-					plr:Kick("\n| SimpleAdmin |\nName spoofing attempt!")
-				end
-			end)
-		end
-		
-		--[[
 			Logs the join to be viewed via :joinlogs
 		--]]
 		Logs.New("JoinLogs", {
@@ -37,8 +25,8 @@ return function()
 		--[[
 			Checks if the server is locked and will kick if player isn't a moderator
 		--]]
-		if Server.ServerLocked and Service.GetPermissionLevel(plr) < Service.AdminLevels.Moderators then
-			plr:Kick("| SimpleAdmin |\n\nThis server is locked!\nReason: " .. Server.ServerLocked)
+		if Server.ServerLock and Service.GetPermissionLevel(plr) < Service.AdminLevels.Moderators then
+			plr:Kick("| SimpleAdmin |\n\nThis server is locked!\nReason: " .. Server.ServerLock)
 			return
 		end
 		
@@ -212,9 +200,81 @@ return function()
 		IsWindowFocused = function(plr, IsFocused)
 			plr = Service.PlayerWrapper(plr)
 			plr.IsWindowFocused = IsFocused
+		end;
+
+		GetChatLogsForPlayer = function(plr, target)
+			plr = Service.PlayerWrapper(plr)
+			if plr.GetLevel() < Service.AdminLevels.Moderators then return end
+
+			local LogTable = {}
+			for k,v in ipairs(Logs.Get("Chat") or {}) do
+				if v.Player == target.Name then
+					table.insert(LogTable, v.Player .. " - " .. v.Message)
+				end
+			end
+			
+			if #LogTable > 0 then
+				plr.Send("DisplayTable", "Chat Logs for " .. target.Name, LogTable)
+			else
+				plr.Send("Message", "This player has no chat logs.")
+			end
+		end;
+
+		GetAdminLogsForPlayer = function(plr, target)
+			plr = Service.PlayerWrapper(plr)
+			if plr.GetLevel() < Service.AdminLevels.Moderators then return end
+
+			local LogTable = {}
+			for k,v in ipairs(Logs.Get("Main")) do
+				if target.Name == v.Player then
+					table.insert(LogTable, v.Player .. " - " .. v.Command)
+				end
+			end
+			
+			if #LogTable > 0 then
+				plr.Send("DisplayTable", "Logs for " .. target.Name, LogTable)
+			else
+				plr.Send("Message", "This player has no admin logs.")
+			end
 		end
 	})
-	
+
+	--[[
+		RemoteFunction Binding
+	--]]
+	Shared.Network:BindFunction({
+		GetPlayerData = function(plr, Target)
+			plr = Service.PlayerWrapper(plr)
+			Target = Service.PlayerWrapper(Target)
+
+			if plr.GetLevel() < Service.AdminLevels.Moderators then
+				return
+			end
+
+			local Character = Target.Character
+			local Humanoid = Character and Character:FindFirstChildOfClass("Humanoid")
+			if not Character or not Humanoid then
+				Character = setmetatable({}, {
+					__index = function(self, key)
+						return "Character/Humanoid was not found!"
+					end
+				})
+			end
+
+			return {
+				Level = Service.GetLevelTitle(Target.GetLevel());
+				Team = Target.Team;
+				IsFocused = Target.IsWindowFocused;
+				ServerTime = Service.RoundTo((tick() - Target.Created) / 60, 2);
+				Ping = math.ceil(Target.Ping);
+				Health = Humanoid.Health;
+				WalkSpeed = Humanoid.WalkSpeed;
+				JumpPower = Humanoid.JumpPower;
+				AccountAge = Target.AccountAge;
+			}
+		end
+	})
+
 	--[[
 		Setting up permissions [this is very tedious and im gonna reconfigure this soon so its not bAD]
 	--]]

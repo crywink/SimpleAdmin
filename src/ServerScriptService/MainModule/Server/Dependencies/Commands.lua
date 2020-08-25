@@ -570,7 +570,9 @@ return function()
 			Run = function(plr, args)
 				local LogTable = {}
 				for k,v in ipairs(Logs.Get("Chat") or {}) do
-					table.insert(LogTable, v.Player .. " - " .. v.Message)
+					if v.Player and v.Message then
+						table.insert(LogTable, v.Player .. " - " .. v.Message)
+					end
 				end
 				
 				plr.Send("DisplayTable", "Chat Logs", LogTable)
@@ -1412,21 +1414,6 @@ return function()
 			end
 		},
 		{
-			Name = "PlayerData";
-			Level = Levels.Moderators;
-			Category = "Utility";
-			Aliases = {"pdata", "pinfo"};
-			Args = {
-				{
-					Name = "Target";
-					Type = "player";
-				}
-			};
-			Run = function(plr, args)
-				
-			end
-		},
-		{
 			Name = "PlaySound";
 			Level = Levels.Moderators;
 			Category = "Music";
@@ -1525,6 +1512,164 @@ return function()
 					Tool.Parent = args.Target.Backpack
 				else
 					plr.Send("Message", "You must be holding a tool to do that!")
+				end
+			end
+		},
+		{
+			Name = "RemoveHats";
+			Level = Levels.Moderators;
+			Category = "Utility";
+			Args = {
+				{
+					Name = "Target";
+					Type = "player";
+				}
+			};
+			Run = function(plr, args)
+				if not args.Target.Character then
+					return
+				end
+
+				for _,v in pairs(args.Target.Character:GetDescendants()) do
+					if v:IsA("Accessory") then
+						v:Destroy()
+					end
+				end
+			end
+		},
+		{
+			Name = "UnCrowd";
+			Aliases = {"decrowd", "pushaway"};
+			Level = Levels.Moderators;
+			Category = "Utility";
+			Args = {
+				{
+					Name = "Target";
+					Type = "player";
+				},
+				{
+					Name = "Radius";
+					Type = "int";
+				}
+			};
+			Run = function(plr, args)
+				if plr == args.Target or not args.Target.Character or not plr.Character then
+					return
+				end
+
+				local Char = plr.Character	
+				local CharCF = Char:GetPrimaryPartCFrame()
+				
+				local TargetChar = args.Target.Character
+				local TargetCharCF = TargetChar:GetPrimaryPartCFrame()
+
+				if (args.Target:DistanceFromCharacter(CharCF.Position) <= args.Radius) then
+					local EndPos = (TargetCharCF.Position - CharCF.Position).Unit * args.Radius
+					TargetChar:SetPrimaryPartCFrame(CFrame.new(EndPos.X, TargetCharCF.Y, EndPos.Z))
+				end
+			end
+		},
+		{
+			Name = "AddStat";
+			Aliases = {"newstat"};
+			Level = Levels.Moderators;
+			Args = {
+				{
+					Name = "Target";
+					Type = "player";
+				},
+				{
+					Name = "Name";
+					Type = "string";
+				},
+				{
+					Name = "Value";
+					Type = "string";
+				}
+			};
+			Run = function(plr, args)
+				local leaderstats = args.Target:FindFirstChild("leaderstats")
+				if not leaderstats then
+					leaderstats = Instance.new("Folder")
+					leaderstats.Name = "leaderstats"
+					leaderstats.Parent = args.Target._Object
+				end
+
+				if leaderstats:FindFirstChild(args.Name) then
+					return --plr.Send("Message", "A leaderstat with name '" .. args.Name .. "' already exists.")
+				end
+
+				local stat = Instance.new("StringValue")
+				stat.Name = args.Name;
+				stat.Value = args.Value;
+				stat.Parent = leaderstats;
+			end
+		},
+		{
+			Name = "playerdata";
+			Level = Levels.Moderators;
+			Args = {
+				{
+					Name = "Target";
+					Type = "player";
+				}
+			};
+			Category = "Utility";
+			Run = function(plr, args)
+				plr.Send("DisplayPlayerData", args.Target._Object)
+			end
+		},
+		{
+			Name = "PlayerChatLogs";
+			Level = Levels.Moderators;
+			Aliases = {"pclogs", "pchatlogs"};
+			Args = {
+				{
+					Name = "Target";
+					Type = "player";
+				}
+			};
+			Category = "Utility";
+			Run = function(plr, args)
+				if plr.GetLevel() < Levels.Moderators then return end
+
+				local LogTable = {}
+				for k,v in ipairs(Logs.Get("Chat") or {}) do
+					if v.Player == args.Target.Name then
+						table.insert(LogTable, v.Player .. " - " .. v.Message)
+					end
+				end
+				
+				if #LogTable > 0 then
+					plr.Send("DisplayTable", "Chat Logs for " .. args.Target.Name, LogTable)
+				else
+					plr.Send("Message", "This player has no chat logs.")
+				end
+			end
+		},
+		{
+			Name = "PlayerLogs";
+			Aliases = {"plogs"};
+			Level = Levels.Moderators;
+			Args = {
+				{
+					Name = "Target";
+					Type = "player";
+				}
+			};
+			Category = "Utility";
+			Run = function(plr, args)
+				local LogTable = {}
+				for k,v in ipairs(Logs.Get("Main")) do
+					if args.Target.Name == v.Player then
+						table.insert(LogTable, v.Player .. " - " .. v.Command)
+					end
+				end
+				
+				if #LogTable > 0 then
+					plr.Send("DisplayTable", "Logs for " .. args.Target.Name, LogTable)
+				else
+					plr.Send("Message", "This player has no admin logs.")
 				end
 			end
 		}

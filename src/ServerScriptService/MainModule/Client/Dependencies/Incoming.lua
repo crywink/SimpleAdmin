@@ -171,6 +171,80 @@ return function()
 		
 		Ping = function()
 			Shared.Network:FireServer("Pong")
+		end,
+
+		DisplayPlayerData = function(Target)
+			local Container = UI.New("Stats for " .. Target.Name)
+			local Data = Shared.Network:InvokeServer("GetPlayerData", Target)
+
+			-- Button Stuff
+			local ButtonSection = Container:AddSection("Buttons")
+			ButtonSection:AddItem("Button", {
+				Text = "View Admin Logs";
+				Function = function()
+					Shared.Network:FireServer("GetAdminLogsForPlayer", Target)
+				end;
+			})
+			ButtonSection:AddItem("Button", {
+				Text = "View Chat Logs";
+				Function = function()
+					Shared.Network:FireServer("GetChatLogsForPlayer", Target)
+				end;
+			})
+
+			-- Main Stuff
+			local MainSection = Container:AddSection("Main")
+			local LevelText = MainSection:AddItem("Text", {
+				Text = "Level: " .. Data.Level;
+			});
+			local TeamText = MainSection:AddItem("Text", {
+				Text = "Team: " .. (Target.Team and Target.Team.Name or "N/A");
+			});
+			local FocusedText = MainSection:AddItem("Text", {
+				Text = "Focused: " .. (Data.IsFocused and "Yes" or "No");
+			});
+			local TimeText = MainSection:AddItem("Text", {
+				Text = "Time in-game: " .. Data.ServerTime .. " minutes";
+			});
+			local PingText = MainSection:AddItem("Text", {
+				Text = "Ping: " .. Data.Ping .. " ms";
+			});
+			local AccountAge = MainSection:AddItem("Text", {
+				Text = "Account Age: " .. Data.AccountAge .. " days old";
+			})
+
+			-- Humanoid Stuff
+			local HumanoidSection = Container:AddSection("Humanoid")
+			local Health = HumanoidSection:AddItem("Text", {
+				Text = "Health: " .. Data.Health;
+			});
+			local WalkSpeed = HumanoidSection:AddItem("Text", {
+				Text = "WalkSpeed: " .. Data.WalkSpeed;
+			})
+			local JumpPower = HumanoidSection:AddItem("Text", {
+				Text = "JumpPower: " .. Data.JumpPower;
+			})
+
+			coroutine.wrap(function()
+				while Container and Container.Object and Container.Object.Parent ~= nil do
+					Data = Shared.Network:InvokeServer("GetPlayerData", Target)
+					
+					if not Target or Target.Parent == nil then
+						break
+					end
+
+					LevelText:SetText("Level: " .. Data.Level);
+					TeamText:SetText("Team: " .. (Target.Team and Target.Team.Name or "N/A"));
+					FocusedText:SetText("Focused: " .. (Data.IsFocused and "Yes" or "No"));
+					TimeText:SetText("Time in-game: " .. Data.ServerTime .. " minutes");
+					PingText:SetText("Ping: " .. Data.Ping .. " ms");
+					Health:SetText("Health: " .. Data.Health);
+					WalkSpeed:SetText("WalkSpeed: " .. Data.WalkSpeed);
+					JumpPower:SetText("JumpPower: " .. Data.JumpPower);
+
+					wait(1.5)
+				end
+			end)()
 		end
 	})
 end
