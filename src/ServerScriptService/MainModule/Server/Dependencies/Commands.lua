@@ -1550,6 +1550,7 @@ return function()
 				{
 					Name = "Radius";
 					Type = "int";
+					Default = 15;
 				}
 			};
 			Run = function(plr, args)
