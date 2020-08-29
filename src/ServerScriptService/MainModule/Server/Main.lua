@@ -194,7 +194,7 @@ return function()
 		
 		Pong = function(plr, data)
 			plr = Service.PlayerWrapper(plr)
-			plr.Ping = tick() - plr.PingSent
+			plr.Ping = (tick() - plr.PingSent) * 1000
 		end;
 		
 		IsWindowFocused = function(plr, IsFocused)
