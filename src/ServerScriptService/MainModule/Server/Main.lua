@@ -68,8 +68,8 @@ return function()
 				1) Splits the message by the command separator ("|")
 				2) Runs the iteration through the command processor and runs the command if it's valid
 			--]]
-			for _,v in ipairs(string.split(msg, Config.CommandSeparator or "|")) do
-				Server.ProcessCommand(plr, ({v:gsub("\/e ", "")})[1])
+			for _,v in ipairs(string.split(({msg:gsub("\/e ", "")})[1], Config.CommandSeparator or "|")) do
+				Server.ProcessCommand(plr, v)
 			end
 			
 			--[[
