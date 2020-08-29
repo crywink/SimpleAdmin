@@ -97,6 +97,7 @@ Library.New = function(Name)
 	
 	--table.insert(CurrentContainers, 1, UI)
 	Service.MakeDraggable(Obj)
+	Service.MakeResizeable(Obj)
 	
 	Conn = RunService.RenderStepped:Connect(function()
 		UI.SectionContainer.CanvasSize = UDim2.new(0, 0, 0, UI.SectionContainer.List.AbsoluteContentSize.Y)
