@@ -19,7 +19,7 @@ return function()
 					for _,Element in pairs(Value) do
 						if Element ~= "_Key" then
 							if type(Element) == "table" then
-								Section:AddElement(nil, Service.Pascal(Element.Name))
+								Section:AddElement(nil, string.lower(Element.Name))
 							else
 								Section:AddElement(nil, tostring(Element))
 							end
