@@ -7,6 +7,7 @@
 local HttpService = game:GetService("HttpService")
 local Players = game:GetService("Players")
 local UserInputService = game:GetService("UserInputService")
+local RunService = game:GetService("RunService")
 
 -- Variables
 local Player = Players.LocalPlayer
@@ -63,6 +64,38 @@ Service.MakeDraggable = function(obj, callback)
 			local Delta = InputObject.Position - DragStart
 			obj.Position = UDim2.new(StartPosition.X.Scale, StartPosition.X.Offset + Delta.X, StartPosition.Y.Scale, StartPosition.Y.Offset + Delta.Y)
 		end
+	end)
+end
+
+Service.MakeResizeable = function(Obj, Data)
+	Data = Data or {}
+
+	local Activator = Service.New("ImageButton", {
+		BackgroundTransparency = 1;
+		ImageTransparency = 1;
+		Size = UDim2.new(0, 10, 0, 10);
+		Position = UDim2.new(1, -10, 1, -10);
+	})
+	Activator.Parent = Obj
+
+	Activator.MouseButton1Down:Connect(function()
+		local OriginalPosition = Vector2.new(Mouse.X, Mouse.Y)
+		local OriginalSize = Obj.AbsoluteSize
+
+		local Connection = RunService.Stepped:Connect(function()
+			local CurrentPosition = Vector2.new(Mouse.X, Mouse.Y)
+			local NewSize = OriginalSize - (OriginalPosition - CurrentPosition)
+
+			Obj.Size = UDim2.new(0, math.clamp(NewSize.X, Data.MinX or 274, Data.MinY or 9e9), 0, math.clamp(NewSize.Y, Data.MinY or 318, Data.MaxY or 9e9))
+		end)
+
+		local Connection2 
+		Connection2 = UserInputService.InputEnded:Connect(function(InputObject)
+			if InputObject.UserInputType == Enum.UserInputType.MouseButton1 then
+				Connection:Disconnect()
+				Connection2:Disconnect()
+			end
+		end)
 	end)
 end
 
