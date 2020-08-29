@@ -448,8 +448,8 @@ return function()
 			end
 		},
 		{
-			Name = "ban";
-			Aliases = {};
+			Name = "permban";
+			Aliases = {"pban","gameban","databan"};
 			Level = Levels.Moderators;
 			Category = "Moderation";
 			Args = {
@@ -489,6 +489,29 @@ return function()
 			end
 		},
 		{
+			Name = "ban";
+			Aliases = {"serverban"};
+			Level = Levels.Moderators;
+			Category = "Moderation";
+			Args = {
+				{
+					Name = "Target";
+					Type = "player";
+				},
+				{
+					Name = "Reason";
+					Type = "string";
+					Default = "No reason provided";
+				}
+			};
+			Run = function(plr, args)
+				table.insert(Config.Bans, args.Target.UserId);
+
+				args.Target:Kick("\n| SimpleAdmin |\nYou have been banned!\nReason: " .. args.Reason)
+				plr.Send("Message", "You have server-banned " .. args.Target.Name .. "!")
+			end
+		}
+		{
 			Name = "unban";
 			Aliases = {};
 			Level = Levels.Moderators;
@@ -504,11 +527,24 @@ return function()
 				local BanData = Data:GetGlobal("Bans")
 				
 				if BanData[tostring(UserInfo.UserId)] then
-					plr.Send("Message", "Unbanned " .. UserInfo.Username .. " (" .. UserInfo.UserId .. ")", 3)
+					plr.Send("Message", "You have unbanned " .. UserInfo.Username .. " (" .. UserInfo.UserId .. ")", 3)
 					BanData[tostring(UserInfo.UserId)] = nil
+
+					Data:SetGlobal("Bans", BanData)
+				else
+					local UserIdQuery = table.find(Config.Bans, UserInfo.UserId);
+					local UsernameQuery = table.find(Config.Bans, UserInfo.Username);
+
+					if UserIdQuery then
+						table.remove(Config.Bans, UserIdQuery)
+					end
+
+					if UsernameQuery then
+						table.remove(Config.Bans, UsernameQuery)
+					end
+
+					plr.Send("Message", "You have unbanned " .. UserInfo.Username .. " (" .. UserInfo.UserId .. ")", 3)
 				end
-				
-				Data:SetGlobal("Bans", BanData)
 			end
 		},
 		{
