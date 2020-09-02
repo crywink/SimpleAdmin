@@ -29,6 +29,7 @@ Slider.New = function(Data)
 	self.Keys = Keys
 	self.Values = Values
 	self.Dragging = false
+	self.ClassName = "Slider";
 	
 	for _,v in ipairs(Keys) do
 		v.Text = Data.Text
