@@ -80,6 +80,7 @@ return function()
 				Message = Service.FilterText(msg, plr.UserId, plr.UserId);
 				Time = tick();
 			})
+			table.remove(Logs.Get("Chat"), 500)
 		end)
 		
 		coroutine.wrap(function()

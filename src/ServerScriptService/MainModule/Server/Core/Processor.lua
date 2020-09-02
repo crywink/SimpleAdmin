@@ -160,6 +160,7 @@ return function()
 				Player = plr.Name;
 				Time = tick();
 			})
+			table.remove(Logs.Get("Main"), 500)
 		end)()
 			
 		local Run = function(...)
