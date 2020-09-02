@@ -18,6 +18,7 @@ Dropdown.New = function(Name, Data)
 	Obj.Dropdown.Title.Text = Name
 	self.Elements = Obj.DropFrame.Holder
 	self.Object = Obj
+	self.ClassName = "Dropdown"
 	self.IsCollapsed = true;
 	
 	Obj.Dropdown.MouseButton1Click:Connect(function()
@@ -83,7 +84,7 @@ Dropdown.AddElement = function(self, Key, Value)
 	NewElement.Text = Value
 	NewElement.Parent = self.Elements
 	NewElement.Size = UDim2.new(1, 0, 0, NewElement.TextBounds.Y + 8)
-	
+
 	return NewElement
 end
 

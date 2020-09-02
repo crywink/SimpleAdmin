@@ -85,18 +85,83 @@ Library.New = function(Name)
 			Conn:Disconnect()	
 		end)
 	end)
+
+	local SearchBar = Obj.Bar.Title.SearchBar
+	local SearchButton = Obj.Bar.Title.Search_Button
+
+	SearchButton.MouseButton1Click:Connect(function()
+		SearchButton.Visible = false
+		SearchBar.Visible = true
+		SearchBar.Input.Text = ""
+		SearchBar.Input:CaptureFocus()
+	end)
+
+	SearchBar.Input:GetPropertyChangedSignal("Text"):Connect(function()
+		local Text = SearchBar.Input.Text
+		SearchBar.Size = UDim2.new(0, math.max(59 - 4, SearchBar.Input.TextBounds.X + 12), 1, 0)
+
+		for _,v in pairs(UI.Items) do
+			if v.ClassName == "Dropdown" then
+				local Visible = false
+
+				for _,Element in pairs(v.Elements:GetChildren()) do
+					if Element:IsA("TextLabel") or Element:IsA("TextButton") then
+						if string.find(Element.Text:lower(), Text:lower()) then
+							Element.Visible = true
+							Visible = true
+						else
+							Element.Visible = false
+						end
+					end
+				end
+
+				if not v.IsCollapsed then
+					v:Expand()
+				end
+				
+				v.Object.Parent.Visible = Visible
+			elseif v.ClassName == "Text" then
+				if string.find(v.Object.Title.Text:lower(), Text:lower()) then
+					v.Object.Visible = true
+				else
+					v.Object.Visible = false
+				end
+			elseif v.ClassName == "Button" then
+				if string.find(v.Object.Title.Text:lower(), Text:lower()) then
+					v.Object.Visible = true
+				else
+					v.Object.Visible = false
+				end
+			end
+		end
+
+		for _,v in pairs(UI.Sections) do
+			if v.UpdateSize then
+				v:UpdateSize()
+			end
+		end
+	end)
+
+	SearchBar.Input.FocusLost:Connect(function()
+		if SearchBar.Input.Text == "" then
+			SearchBar.Visible = false
+			SearchButton.Visible = true
+		end
+	end)
 	
 	table.insert(CurrentContainers, 1, UI)
 	UI.Object = Obj
 	UI.SectionContainer = Obj.Section_Holder.Holder	
+	UI.Items = {}
+	UI.Sections = {}
 	
 	if #CurrentContainers > 0 then
 		Obj.Position = CurrentContainers[1].Object.Position
 		OrganizeContainers()
 	end
 	
-	--table.insert(CurrentContainers, 1, UI)
 	Service.MakeDraggable(Obj)
+	Service.MakeResizeable(Obj)
 	
 	Conn = RunService.RenderStepped:Connect(function()
 		UI.SectionContainer.CanvasSize = UDim2.new(0, 0, 0, UI.SectionContainer.List.AbsoluteContentSize.Y)
@@ -148,6 +213,9 @@ Library.AddSection = function(self, Name, Type, Data)
 		Obj.Name = Name
 		NewSection.Container = Obj.Holder
 		NewSection.Object = Obj
+		NewSection.Parent = self
+		
+		table.insert(self.Sections, NewSection)
 		
 		return NewSection
 	elseif Type == "Dropdown" then
@@ -160,6 +228,9 @@ Library.AddSection = function(self, Name, Type, Data)
 		Dropdown.Object.Parent = Section
 		Dropdown:Collapse()
 		
+		table.insert(self.Sections, Dropdown)
+		table.insert(self.Items, Dropdown)
+
 		return Dropdown
 	end
 end
@@ -176,6 +247,7 @@ Section.AddItem = function(self, name, data)
 	if Item.UpdateSize then
 		Item:UpdateSize()
 	end
+	table.insert(self.Parent.Items, Item)
 	
 	self:UpdateSize()
 	return Item

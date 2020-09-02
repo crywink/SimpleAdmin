@@ -21,6 +21,7 @@ Toggle.New = function(Data)
 	Object.Name = Data.Name or Object.Name
 	
 	self.Object = Object
+	self.ClassName = "Toggle";
 	
 	Object.MouseButton1Click:Connect(function()
 		self:Toggle()

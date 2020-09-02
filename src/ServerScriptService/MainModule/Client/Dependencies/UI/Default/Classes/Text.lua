@@ -22,6 +22,7 @@ Text.New = function(Data)
 	Object.ImageTransparency = Data.ImageTransparency or Object.ImageTransparency
 	
 	self.Object = Object
+	self.ClassName = "Text";
 	
 	return self
 end

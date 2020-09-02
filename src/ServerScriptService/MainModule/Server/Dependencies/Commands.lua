@@ -448,8 +448,8 @@ return function()
 			end
 		},
 		{
-			Name = "ban";
-			Aliases = {};
+			Name = "permban";
+			Aliases = {"pban","gameban","databan"};
 			Level = Levels.Moderators;
 			Category = "Moderation";
 			Args = {
@@ -489,6 +489,29 @@ return function()
 			end
 		},
 		{
+			Name = "ban";
+			Aliases = {"serverban"};
+			Level = Levels.Moderators;
+			Category = "Moderation";
+			Args = {
+				{
+					Name = "Target";
+					Type = "player";
+				},
+				{
+					Name = "Reason";
+					Type = "string";
+					Default = "No reason provided";
+				}
+			};
+			Run = function(plr, args)
+				table.insert(Config.Bans, args.Target.UserId);
+
+				args.Target:Kick("\n| SimpleAdmin |\nYou have been banned!\nReason: " .. args.Reason)
+				plr.Send("Message", "You have server-banned " .. args.Target.Name .. "!")
+			end
+		},
+		{
 			Name = "unban";
 			Aliases = {};
 			Level = Levels.Moderators;
@@ -504,11 +527,24 @@ return function()
 				local BanData = Data:GetGlobal("Bans")
 				
 				if BanData[tostring(UserInfo.UserId)] then
-					plr.Send("Message", "Unbanned " .. UserInfo.Username .. " (" .. UserInfo.UserId .. ")", 3)
+					plr.Send("Message", "You have unbanned " .. UserInfo.Username .. " (" .. UserInfo.UserId .. ")", 3)
 					BanData[tostring(UserInfo.UserId)] = nil
+
+					Data:SetGlobal("Bans", BanData)
+				else
+					local UserIdQuery = table.find(Config.Bans, UserInfo.UserId);
+					local UsernameQuery = table.find(Config.Bans, UserInfo.Username);
+
+					if UserIdQuery then
+						table.remove(Config.Bans, UserIdQuery)
+					end
+
+					if UsernameQuery then
+						table.remove(Config.Bans, UsernameQuery)
+					end
+
+					plr.Send("Message", "You have unbanned " .. UserInfo.Username .. " (" .. UserInfo.UserId .. ")", 3)
 				end
-				
-				Data:SetGlobal("Bans", BanData)
 			end
 		},
 		{
@@ -1550,6 +1586,7 @@ return function()
 				{
 					Name = "Radius";
 					Type = "int";
+					Default = 15;
 				}
 			};
 			Run = function(plr, args)
@@ -1672,6 +1709,114 @@ return function()
 					plr.Send("Message", "This player has no admin logs.")
 				end
 			end
+		},
+		{
+			Name = "groupban";
+			Aliases = {"gban"};
+			Level = Levels.Admins;
+			Args = {
+				{
+					Name = "GroupId";
+					Type = "int";
+				},
+				{
+					Name = "Reason";
+					Type = "string";
+					Default = "No reason provided";
+				}
+			};
+			Category = "Moderation";
+			Run = function(plr, args)
+				local Success, GroupInfo = pcall(function()
+					return Service.GroupService:GetGroupInfoAsync(args.GroupId)
+				end)
+
+				if not Success then
+					return plr.Send("Message", "An error occurred while trying to fetch group data.");
+				end
+
+				local GroupBans = Data:GetGlobal("GroupBans") or {}
+
+				if not Service.TableFind(GroupBans, function(v)
+					return v.GroupId == args.GroupId
+				end) then
+					table.insert(GroupBans, {
+						GroupId = args.GroupId;
+						Reason = args.Reason;
+						Moderator = plr.UserId;
+					})
+					Data:SetGlobal("GroupBans", GroupBans)
+					
+					plr.Send("Message", "You banned group '" .. GroupInfo.Name .. "' for '" .. args.Reason .. "'")
+				else
+					plr.Send("Message", "This group is already banned. Use ':groupbans' to view a list of banned groups.")
+				end
+			end
+		},
+		{
+			Name = "ungroupban";
+			Aliases = {"ungban"};
+			Level = Levels.Admins;
+			Args = {
+				{
+					Name = "GroupId";
+					Type = "int";
+				}
+			};
+			Category = "Moderation";
+			Run = function(plr, args)
+				local Success, GroupInfo = pcall(function()
+					return Service.GroupService:GetGroupInfoAsync(args.GroupId)
+				end)
+				
+				if not Success then
+					return plr.Send("Message", "An error occurred while trying to fetch group data.");
+				end
+				
+				local GroupBans = Data:GetGlobal("GroupBans") or {}
+				
+				if Service.TableFind(GroupBans, function(v)
+						if v.GroupId == args.GroupId then
+							table.remove(GroupBans, table.find(GroupBans, v))
+							return true
+						end
+				end) then
+					Data:SetGlobal("GroupBans", GroupBans)
+					plr.Send("Message", "You unbanned group '" .. GroupInfo.Name .. "' with ID '" .. args.GroupId .. "'")
+				else
+					plr.Send("Message", "This group is not banned. Use ':groupbans' to view a list of banned groups.")
+				end
+			end
+		},
+		{
+			Name = "groupbans";
+			Level = Levels.Moderators;
+			Category = "Moderation";
+			Run = function(plr, args)
+				local GroupBans = Data:GetGlobal("GroupBans") or {}
+				
+				if #GroupBans > 0 then
+					local ToSend = {}
+
+					for _,v in ipairs(GroupBans) do
+						local Success, GroupInfo = pcall(function()
+							return Service.GroupService:GetGroupInfoAsync(v.GroupId)
+						end)
+
+						if Success then
+							table.insert(ToSend, {
+								GroupInfo.Name .. " (" .. v.GroupId .. ")";
+								"Reason: " .. v.Reason;
+								"Banned By: " .. Service.Players:GetNameFromUserIdAsync(v.Moderator);
+							})
+						end
+					end
+					
+					plr.Send("DisplayTable", "Banned Groups", ToSend)
+				else
+					plr.Send("Message", "You have no groups banned from this game.")
+				end
+			end
 		}
 	}
 	
@@ -1715,4 +1860,4 @@ return function()
 	end
 	
 	return Commands
-end
+end 

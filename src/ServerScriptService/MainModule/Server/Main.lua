@@ -25,9 +25,18 @@ return function()
 		--[[
 			Checks if the server is locked and will kick if player isn't a moderator
 		--]]
-		if Server.ServerLock and Service.GetPermissionLevel(plr) < Service.AdminLevels.Moderators then
-			plr:Kick("| SimpleAdmin |\n\nThis server is locked!\nReason: " .. Server.ServerLock)
-			return
+		if Service.GetPermissionLevel(plr) < Service.AdminLevels.Moderators then
+			if Server.ServerLock then
+				plr:Kick("| SimpleAdmin |\n\nThis server is locked!\nReason: " .. Server.ServerLock)
+				return
+			else
+				local GroupBans = Data:GetGlobal("GroupBans") or {}
+				for _,v in pairs(GroupBans) do
+					if plr:IsInGroup(v.GroupId) then
+						plr:Kick("| SimpleAdmin |\n\nYou're in a group that's banned from this game.\nGroup Name: " .. Service.GroupService:GetGroupInfoAsync(v.GroupId).Name)
+					end
+				end
+			end
 		end
 		
 		--[[
@@ -68,8 +77,8 @@ return function()
 				1) Splits the message by the command separator ("|")
 				2) Runs the iteration through the command processor and runs the command if it's valid
 			--]]
-			for _,v in ipairs(string.split(msg, Config.CommandSeparator or "|")) do
-				Server.ProcessCommand(plr, ({v:gsub("\/e ", "")})[1])
+			for _,v in ipairs(string.split(({msg:gsub("\/e ", "")})[1], Config.CommandSeparator or "|")) do
+				Server.ProcessCommand(plr, v)
 			end
 			
 			--[[
@@ -80,6 +89,7 @@ return function()
 				Message = Service.FilterText(msg, plr.UserId, plr.UserId);
 				Time = tick();
 			})
+			table.remove(Logs.Get("Chat"), 500)
 		end)
 		
 		coroutine.wrap(function()
@@ -194,7 +204,7 @@ return function()
 		
 		Pong = function(plr, data)
 			plr = Service.PlayerWrapper(plr)
-			plr.Ping = tick() - plr.PingSent
+			plr.Ping = (tick() - plr.PingSent) * 1000
 		end;
 		
 		IsWindowFocused = function(plr, IsFocused)

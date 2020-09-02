@@ -20,6 +20,7 @@ Button.New = function(Data)
 	Object.Title.Text = Data.Text
 	Object.Name = Data.Name or Object.Name
 	self.Object = Object
+	self.ClassName = "Button";
 	
 	Object.MouseButton1Click:Connect(function()
 		self:Activate(true)

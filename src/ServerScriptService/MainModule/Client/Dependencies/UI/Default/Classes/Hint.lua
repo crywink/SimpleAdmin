@@ -14,6 +14,7 @@ Hint.New = function(Text, Timeout)
 	Object.Hint.Size = UDim2.new(0, Object.Hint.Hint.TextBounds.X + 10, 0, 0)
 	Object.Hint:TweenSize(UDim2.new(0, Object.Hint.Hint.TextBounds.X + 10, 0, Object.Hint.Hint.TextBounds.Y + 20), "In", "Sine", .25, true)
 	self.Object = Object
+	self.ClassName = "Hint";
 	
 	coroutine.wrap(function()
 		wait(Timeout or 10)
