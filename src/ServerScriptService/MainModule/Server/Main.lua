@@ -25,9 +25,18 @@ return function()
 		--[[
 			Checks if the server is locked and will kick if player isn't a moderator
 		--]]
-		if Server.ServerLock and Service.GetPermissionLevel(plr) < Service.AdminLevels.Moderators then
-			plr:Kick("| SimpleAdmin |\n\nThis server is locked!\nReason: " .. Server.ServerLock)
-			return
+		if Service.GetPermissionLevel(plr) < Service.AdminLevels.Moderators then
+			if Server.ServerLock then
+				plr:Kick("| SimpleAdmin |\n\nThis server is locked!\nReason: " .. Server.ServerLock)
+				return
+			else
+				local GroupBans = Data:GetGlobal("GroupBans") or {}
+				for _,v in pairs(GroupBans) do
+					if plr:IsInGroup(v.GroupId) then
+						plr:Kick("| SimpleAdmin |\n\nYou're in a group that's banned from this game.\nGroup Name: " .. Service.GroupService:GetGroupInfoAsync(v.GroupId).Name)
+					end
+				end
+			end
 		end
 		
 		--[[
