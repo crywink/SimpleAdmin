@@ -1713,7 +1713,7 @@ return function()
 		{
 			Name = "groupban";
 			Aliases = {"gban"};
-			Level = Levels.Moderators;
+			Level = Levels.Admins;
 			Args = {
 				{
 					Name = "GroupId";
@@ -1747,7 +1747,7 @@ return function()
 					})
 					Data:SetGlobal("GroupBans", GroupBans)
 					
-					plr.Send("Message", "You banned group '" .. GroupInfo.Name .. "' with ID '" .. args.GroupId .. "' for '" .. args.Reason .. "'")
+					plr.Send("Message", "You banned group '" .. GroupInfo.Name .. "' for '" .. args.Reason .. "'")
 				else
 					plr.Send("Message", "This group is already banned. Use ':groupbans' to view a list of banned groups.")
 				end
@@ -1756,7 +1756,7 @@ return function()
 		{
 			Name = "ungroupban";
 			Aliases = {"ungban"};
-			Level = Levels.Moderators;
+			Level = Levels.Admins;
 			Args = {
 				{
 					Name = "GroupId";
