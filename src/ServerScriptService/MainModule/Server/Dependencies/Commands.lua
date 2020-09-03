@@ -106,6 +106,41 @@ return function()
 			Run = function(plr, args)
 				plr.Send("DisplayTable", "Changelog", {
 					{
+						"Update 1.7.0";
+						"! Fixed ping not showing accurately";
+						"! :Ban now server bans - to ban permanently, use :pban.";
+						"! Limited logs to 500 queries - additional queries will be sliced.";
+						"! Added default radius (15) to :crowd";
+						"+ Search button is now functional";
+						"+ Added UI resizing";
+						"+ Added :groupban / :ungroupban / :groupbans";
+						"+ Added :pban";
+						"- Removed pascal converter";
+					},
+					{
+						"Update 1.6.0 Alpha";
+						"+ Added 'PlayerData' command";
+						"+ Added 'AddStat' command (adds a leaderstat)";
+						"+ Added 'UnCrowd' command (pushes people away from you)";
+						"+ Added 'RemoveHats' command";
+						"+ Added 'PlayerChatLogs' command (shows chatlogs for certain player) ('playerchatlogs', 'pclogs', 'pchatlogs')";
+						"+ Added 'PlayerLogs' command (shows admin logs for certain player) ('playerlogs', 'plogs')";
+						"+ Added 'HandTo' command (hands whatever tool you're holding to target)";
+						"+ Added PlayerWrapper.Created";
+						"+ Added SetText method to Text UI class";
+						"- Removed AntiNameSpoofing (Roblox patched it themselves)";
+						"! Fixed some processor issues";
+						"! Fixed ServerLock";
+					},
+					{
+						"Update 1.5.7 Alpha";
+						"! Fixed :shutdown";
+					},
+					{
+						"Update 1.5.6 Alpha";
+						"! Fixed the weird issue with like 90% of the commands just not working at all... I have no clue what was wrong, but for some reason ipairs was just not going through every indice. (possibly a luau issue)";
+					},
+					{
 						"Update 1.5.5 Alpha";
 						"+ Added ':handto <target>' - Hands whatever tool you're holding to <target>.";
 					},
