@@ -483,7 +483,7 @@ return function()
 						return plr.Send("Message", "This user has the same or higher permission level.", 3)
 					end
 					
-					Service.BanUser(PlayerInfo.UserId, args.Reason, plr.Name)
+					Service.BanUser(PlayerInfo.UserId, args.Reason, plr.UserId)
 					plr.Send("Message", "Banned " .. PlayerInfo.Username, 3)
 				end
 			end
