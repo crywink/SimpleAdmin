@@ -1642,6 +1642,37 @@ return function()
 			end
 		},
 		{
+			Name = "Crowd";
+			Aliases = {"BringRadius"};
+			Level = Levels.Moderators;
+			Category = "Utility";
+			Args = {
+				{
+					Name = "Target";
+					Type = "player";
+				},
+				{
+					Name = "Radius";
+					Type = "int";
+					Default = 15;
+				}
+			};
+			Run = function(plr, args)
+				if plr == args.Target or not args.Target.Character or not plr.Character then
+					return
+				end
+
+				local Char = plr.Character	
+				local CharCF = Char:GetPrimaryPartCFrame()
+				
+				local TargetChar = args.Target.Character
+				local TargetCharCF = TargetChar:GetPrimaryPartCFrame()
+
+				local EndPos = (TargetCharCF.Position - CharCF.Position).Unit * args.Radius
+				TargetChar:SetPrimaryPartCFrame(CFrame.new(EndPos.X, TargetCharCF.Y, EndPos.Z))
+			end
+		},
+		{
 			Name = "AddStat";
 			Aliases = {"newstat"};
 			Level = Levels.Moderators;
