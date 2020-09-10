@@ -461,16 +461,14 @@ return function()
 				{
 					Name = "Target";
 					Type = "player";
+					HierarchyLimited = true;
 				}
 			};
 			Category = "Core";
 			Run = function(plr, args)
-				if args.Target.GetLevel() >= plr.GetLevel() then
-					return
-				end
-				
-				args.Target.Send("Message", "Your permissions have been revoked!", 5)
 				Service.SetPermissionLevel(args.Target._Object, 0, true)
+				plr.Send("Message", "You removed " .. args.Target.Name .. "'s permissions.'", 5)
+				args.Target.Send("Message", "Your permissions have been revoked!", 5)
 			end
 		},
 		{
