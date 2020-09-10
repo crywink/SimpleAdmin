@@ -187,7 +187,9 @@ return function()
 							if v ~= plr and RealArg.HierarchyLimited then
 								if v.GetLevel() >= plr.GetLevel() then
 									continue
-								end	
+								end
+							elseif v == plr and RealArg.DisableSelf then
+								continue	
 							end
 							
 							Run(plr, Service.TableReplace(ParsedArgs, ParsedArg, v))
