@@ -1,3 +1,5 @@
+Commands, Service = nil, nil
+
 --[[
     SimpleAdmin | Roles
 --]]
@@ -42,7 +44,10 @@ local Roles = {
 		{
 			Name = "Moderator";
 			PermissionValue = 258684;
-		}
+		},
+        {
+
+        }
 	};
 }
 
@@ -61,9 +66,37 @@ Roles.UnpackFlags = function(PermissionList)
 	
 	for k,v in pairs(Roles.PermissionFlags) do
 		if Roles.HasPermission(PermissionList, v) then
-			Unpacked[k] = v			
+			Unpacked[k] = v
 		end
 	end
 	
 	return Unpacked
+end
+
+Roles.GetRoleIndex = function(Role)
+    local Existing = Roles.ExistingRoles
+    for i = 1, #Existing do
+        if Existing[i] == Role then
+            return i
+        end
+    end
+end
+
+Roles.GetRoleByName = function(Name)
+    for _,v in ipairs(Roles.ExistingRoles) do
+        if v.Name == Name then
+            return v
+        end
+    end
+end
+
+Roles.Init = function()
+    for _,Command in pairs(Commands.Commands) do
+        for Idx,FlagName in ipairs(Command.Flags or {}) do
+            local BitValue = Roles.PermissionFlags[FlagName]
+            if BitValue then
+                Command.Flags[Idx] = BitValue;
+            end
+        end
+    end
 end
