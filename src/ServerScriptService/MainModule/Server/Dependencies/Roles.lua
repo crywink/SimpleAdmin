@@ -45,9 +45,13 @@ local Roles = {
 			Name = "Moderator";
 			Cluster = 258684; -- To see what flags this allows, refer to Roles.UnpackFlags
 		},
-        {
-
-        }
+		{
+			Name = "ExampleRole";
+			Cluster = Roles.CalculateBit({
+				Roles.PermissionFlags.GUEST;
+				Roles.PermissionFlags.MUTE_PLAYERS;
+			})
+		}
 	};
 }
 
