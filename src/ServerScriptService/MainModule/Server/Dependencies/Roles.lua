@@ -43,7 +43,7 @@ local Roles = {
 	ExistingRoles = {
 		{
 			Name = "Moderator";
-			PermissionValue = 258684;
+			Cluster = 258684; -- To see what flags this allows, refer to Roles.UnpackFlags
 		},
         {
 
@@ -51,21 +51,24 @@ local Roles = {
 	};
 }
 
+-- Converts an array of permission bits into a cluster.
 Roles.CalculateBit = function(PermissionList)
 	return bit32.bor(unpack(PermissionList))
 end
 
-Roles.HasPermission = function(PermissionList, Permission)
-	PermissionList = tonumber(PermissionList) or Roles.CalculateBit(PermissionList)
+-- Returns whether or not the passed permission cluster contains the passed permission value.
+Roles.HasPermission = function(Cluster, Permission)
+	Cluster = tonumber(Cluster) or Roles.CalculateBit(Cluster)
 	
-	return bit32.band(PermissionList, Permission) == Permission
+	return bit32.band(Cluster, Permission) == Permission
 end
 
-Roles.UnpackFlags = function(PermissionList)
+-- This will convert the passed bit value to an array of flag labels. 
+Roles.UnpackFlags = function(Cluster)
 	local Unpacked = {}
 	
 	for k,v in pairs(Roles.PermissionFlags) do
-		if Roles.HasPermission(PermissionList, v) then
+		if Roles.HasPermission(Cluster, v) then
 			Unpacked[k] = v
 		end
 	end
@@ -73,6 +76,7 @@ Roles.UnpackFlags = function(PermissionList)
 	return Unpacked
 end
 
+-- Allows you to fetch a role's index in the table.
 Roles.GetRoleIndex = function(Role)
     local Existing = Roles.ExistingRoles
     for i = 1, #Existing do
@@ -82,6 +86,7 @@ Roles.GetRoleIndex = function(Role)
     end
 end
 
+-- Allows you to fetch a role by it's label.
 Roles.GetRoleByName = function(Name)
     for _,v in ipairs(Roles.ExistingRoles) do
         if v.Name == Name then
@@ -91,6 +96,8 @@ Roles.GetRoleByName = function(Name)
 end
 
 Roles.Init = function()
+
+	-- Iterate through existing commands and convert the flags to their respective bit value.
     for _,Command in pairs(Commands.Commands) do
         for Idx,FlagName in ipairs(Command.Flags or {}) do
             local BitValue = Roles.PermissionFlags[FlagName]
