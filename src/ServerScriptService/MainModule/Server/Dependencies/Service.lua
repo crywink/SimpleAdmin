@@ -182,7 +182,7 @@ Service.PlayerWrapper = function(plr)
 			Ban = function(mod, reason)
 				Environment.Apply()
 				
-				Service.BanUser(plr.UserId)
+				Service.BanUser(plr.UserId, reason, mod)
 				
 				plr:Kick("\n| SimpleAdmin |\nYou have been banned by a moderator.\nReason: " .. (reason or "N/A"))
 			end;
