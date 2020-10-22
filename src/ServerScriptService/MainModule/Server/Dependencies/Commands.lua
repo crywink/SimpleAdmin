@@ -84,6 +84,7 @@ return function()
 				{
 					Name = "Target";
 					Type = "player";
+					DisableSelf = true;
 					HierarchyLimited = true;
 				},
 				{
@@ -545,6 +546,7 @@ return function()
 				{
 					Name = "Target";
 					Type = "player";
+					DisableSelf = true;
 				},
 				{
 					Name = "Reason";
@@ -1010,6 +1012,7 @@ return function()
 				{
 					Name = "Target";
 					Type = "player";
+					DisableSelf = true;
 				}
 			};
 			Run = function(plr, args)
