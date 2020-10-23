@@ -37,7 +37,7 @@ return function()
 		{
 			Name = "kill";
 			Aliases = {"death"};
-			Flags = {"MANAGE_CHARACTERS"}
+			Flags = {"MANAGE_CHARACTERS"};
 			Level = Levels.Moderators;
 			Args = {
 				{
@@ -637,7 +637,7 @@ return function()
 		{
 			Name = "logs";
 			Aliases = {"modlogs"};
-			Flags = {"VIEW_LOGS"}
+			Flags = {"VIEW_LOGS"};
 			Level = Levels.Moderators;
 			Category = "Core";
 			Args = {};
@@ -1781,7 +1781,7 @@ return function()
 		{
 			Name = "playerdata";
 			Level = Levels.Moderators;
-			Flags = {"VIEW_PLAYER_DATA"}
+			Flags = {"VIEW_PLAYER_DATA"};
 			Args = {
 				{
 					Name = "Target";
@@ -1852,7 +1852,7 @@ return function()
 		{
 			Name = "groupban";
 			Aliases = {"gban"};
-			Flags = {"MANAGE_GROUP_BANS"}
+			Flags = {"MANAGE_GROUP_BANS"};
 			Level = Levels.Admins;
 			Args = {
 				{
@@ -1896,7 +1896,7 @@ return function()
 		{
 			Name = "ungroupban";
 			Aliases = {"ungban"};
-			Flags = {"MANAGE_GROUP_BANS"}
+			Flags = {"MANAGE_GROUP_BANS"};
 			Level = Levels.Admins;
 			Args = {
 				{

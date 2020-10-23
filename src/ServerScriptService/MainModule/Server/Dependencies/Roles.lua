@@ -44,13 +44,6 @@ local Roles = {
 		{
 			Name = "Moderator";
 			Cluster = 258684; -- To see what flags this allows, refer to Roles.UnpackFlags
-		},
-		{
-			Name = "ExampleRole";
-			Cluster = Roles.CalculateBit({
-				Roles.PermissionFlags.GUEST;
-				Roles.PermissionFlags.MUTE_PLAYERS;
-			})
 		}
 	};
 }
@@ -109,7 +102,7 @@ Roles.CreateRole = function(Name, Cluster, Order, Members, Save)
 		Cluster = Cluster;
 		Id = Id;
 		Members = Members or {};
-	})
+	}
 
 	if Save then
 		local RoleData = Data:GetGlobal("Roles") or Service.CopyTable(Roles.ExistingRoles)
@@ -138,3 +131,14 @@ Roles.Init = function()
         end
     end
 end
+
+-- Adding an example role
+table.insert(Roles, {
+	Name = "ExampleRole";
+	Cluster = Roles.CalculateBit({
+		Roles.PermissionFlags.GUEST;
+		Roles.PermissionFlags.MUTE_PLAYERS;
+	})
+})
+
+return Roles

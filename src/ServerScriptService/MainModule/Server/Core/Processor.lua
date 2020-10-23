@@ -150,7 +150,7 @@ return function()
 			if RealArg.Type == "int" then
 				InputArg = tonumber(InputArg)
 				ParsedArgs[RealArg.Name] = InputArg and math.floor(InputArg) or Default
-			elseif RealArg.Type == "number" then
+			elseif RealArg.Type == "number" then                                                                                     
 				ParsedArgs[RealArg.Name] = tonumber(InputArg or Default) or Default
 			elseif RealArg.Type == "string" then
 				if i ~= #CommandArgs then
