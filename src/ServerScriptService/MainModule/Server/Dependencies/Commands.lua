@@ -1959,6 +1959,14 @@ return function()
 					plr.Send("Message", "You have no groups banned from this game.")
 				end
 			end
+		},
+		{
+			Name = "internallogs";
+			Level = Levels.Developers;
+			Flags = {"MANAGE_GAME"};
+			Run = function(plr, args)
+				plr.Send("DisplayTable", "Internal Logs", Logs.Get("Internal"))
+			end
 		}
 	}
 	
