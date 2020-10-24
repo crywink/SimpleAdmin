@@ -67,7 +67,7 @@ Service.MakeDraggable = function(obj, callback)
 	end)
 end
 
-Service.MakeResizeable = function(Obj, Data)
+Service.MakeResizeable = function(Obj, Data, Callback)
 	Data = Data or {}
 
 	local Activator = Service.New("ImageButton", {
@@ -87,6 +87,7 @@ Service.MakeResizeable = function(Obj, Data)
 			local NewSize = OriginalSize - (OriginalPosition - CurrentPosition)
 
 			Obj.Size = UDim2.new(0, math.clamp(NewSize.X, Data.MinX or 274, Data.MinY or 9e9), 0, math.clamp(NewSize.Y, Data.MinY or 318, Data.MaxY or 9e9))
+			coroutine.wrap(Callback)()
 		end)
 
 		local Connection2 

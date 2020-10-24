@@ -161,7 +161,13 @@ Library.New = function(Name)
 	end
 	
 	Service.MakeDraggable(Obj)
-	Service.MakeResizeable(Obj)
+	Service.MakeResizeable(Obj, nil, function()
+		for _,v in pairs(UI.Items) do
+			if v.UpdateSize then
+				v:UpdateSize()
+			end
+		end
+	end)
 	
 	Conn = RunService.RenderStepped:Connect(function()
 		UI.SectionContainer.CanvasSize = UDim2.new(0, 0, 0, UI.SectionContainer.List.AbsoluteContentSize.Y)
