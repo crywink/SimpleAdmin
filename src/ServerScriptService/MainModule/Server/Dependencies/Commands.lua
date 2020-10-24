@@ -547,6 +547,7 @@ return function()
 					Name = "Target";
 					Type = "player";
 					DisableSelf = true;
+					DisableShortcuts = true;
 				},
 				{
 					Name = "Reason";
