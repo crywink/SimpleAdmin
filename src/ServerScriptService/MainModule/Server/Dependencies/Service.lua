@@ -182,7 +182,7 @@ Service.PlayerWrapper = function(plr)
 			Ban = function(mod, reason)
 				Environment.Apply()
 				
-				Service.BanUser(plr.UserId)
+				Service.BanUser(plr.UserId, reason, mod)
 				
 				plr:Kick("\n| SimpleAdmin |\nYou have been banned by a moderator.\nReason: " .. (reason or "N/A"))
 			end;
@@ -291,6 +291,16 @@ Service.ResolveToUserId = function(query)
 		UserId = UserID;
 		Username = Username;
 	}
+end
+
+Service.BindToPlayerAdded = function(Function, RunExisting)
+	Players.PlayerAdded:Connect(Function)
+
+	if RunExisting then
+		for _,v in pairs(Players:GetPlayers()) do
+			coroutine.wrap(Function)(v)
+		end
+	end
 end
 
 Service.BindCustomConnection = function(ConnectionType, Name, Function)
