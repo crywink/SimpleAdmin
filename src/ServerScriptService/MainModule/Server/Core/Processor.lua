@@ -25,9 +25,26 @@ return function()
 	Server.ResolveToPlayers = function(Player, String, Wrap, DisableShortcuts)
 		local StringLower = lower(String):gsub("%s","")
 		local Wrapper = Service.PlayerWrapper(Player)
+		local SplitPlayers = string.split(StringLower, ",")
 		local Return
+		
+		if #SplitPlayers > 1 then
+			local SplitPlayersParsed = {}
+
+			for _,v in pairs(SplitPlayers) do
+				local ParsedPlayersReturned = Server.ResolveToPlayers(Player, v, false, DisableShortcuts)
+				
+				if type(ParsedPlayersReturned) == "table" then
+					for _,plr in pairs(ParsedPlayersReturned) do
+						table.insert(SplitPlayersParsed, plr)
+					end
+				else
+					table.insert(SplitPlayersParsed, ParsedPlayersReturned)
+				end
+			end
 			
-		if StringLower == "me" then
+			Return = SplitPlayersParsed
+		elseif StringLower == "me" then
 			Return = Player
 		elseif StringLower == "others" then
 			Return = Service.GetPlayers({Player})
