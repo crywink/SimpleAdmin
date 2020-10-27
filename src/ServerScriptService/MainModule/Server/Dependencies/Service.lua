@@ -293,6 +293,16 @@ Service.ResolveToUserId = function(query)
 	}
 end
 
+Service.BindToPlayerAdded = function(Function, RunExisting)
+	Players.PlayerAdded:Connect(Function)
+
+	if RunExisting then
+		for _,v in pairs(Players:GetPlayers()) do
+			coroutine.wrap(Function)(v)
+		end
+	end
+end
+
 Service.BindCustomConnection = function(ConnectionType, Name, Function)
 	Environment.Apply()
 	
