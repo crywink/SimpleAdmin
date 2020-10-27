@@ -162,18 +162,27 @@ Library.New = function(Name)
 	
 	Service.MakeDraggable(Obj)
 	Service.MakeResizeable(Obj, nil, function()
+
+	end)
+	
+	Conn = RunService.RenderStepped:Connect(function()
+		if not UI or not Obj or not UI.SectionContainer:FindFirstChild("List") then
+			Conn:Disconnect()
+			return
+		end
+
+		UI.SectionContainer.CanvasSize = UDim2.new(0, 0, 0, UI.SectionContainer.List.AbsoluteContentSize.Y)
+
 		for _,v in pairs(UI.Items) do
 			if v.UpdateSize then
 				v:UpdateSize()
 			end
 		end
-	end)
-	
-	Conn = RunService.RenderStepped:Connect(function()
-		UI.SectionContainer.CanvasSize = UDim2.new(0, 0, 0, UI.SectionContainer.List.AbsoluteContentSize.Y)
-		
-		if not UI or not Obj or not UI.SectionContainer:FindFirstChild("List") then
-			Conn:Disconnect()
+
+		for _,v in pairs(UI.Sections) do
+			if v.UpdateSize then
+				v:UpdateSize()
+			end
 		end
 	end)
 	
@@ -253,6 +262,7 @@ Section.AddItem = function(self, name, data)
 	if Item.UpdateSize then
 		Item:UpdateSize()
 	end
+
 	table.insert(self.Parent.Items, Item)
 	
 	self:UpdateSize()
