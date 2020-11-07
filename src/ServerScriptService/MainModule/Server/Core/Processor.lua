@@ -133,6 +133,11 @@ return function()
 				end
 			end
 			
+			if RealArg.Type:find("<") and RealArg.Type:sub(#RealArg.Type) == ">" then
+				RealArg.TypeModifier = RealArg.Type:sub(RealArg.Type:find("<")+1, #RealArg.Type - 1)
+				RealArg.Type = RealArg.Type:sub(1, RealArg.Type:find("<") - 1)
+			end
+			
 			if RealArg.Type == "int" then
 				InputArg = tonumber(InputArg)
 				ParsedArgs[RealArg.Name] = InputArg and math.floor(InputArg) or Default
@@ -151,6 +156,20 @@ return function()
 				end
 			elseif RealArg.Type == "player" then
 				ParsedArgs[RealArg.Name] = InputArg and lower(InputArg) or "me"
+			elseif RealArg.Type == "enum" then
+				local EnumType = RealArg.TypeModifier:gsub(" ", "")
+				local EnumItem
+
+				for j, Item in ipairs(Enum[EnumType]:GetEnumItems()) do
+					local Elements = tostring(Item):split(".")
+					local ItemName = Elements[#Elements]
+
+					if lower(InputArg) == lower(ItemName):sub(1, #InputArg) or (tonumber(InputArg) and tonumber(InputArg) == j) then
+						EnumItem = item
+					end
+				end
+				
+				ParsedArgs[RealArg.Name] = EnumItem or Default or EnumType:GetEnumItems()[1]
 			end
 		end
 		
