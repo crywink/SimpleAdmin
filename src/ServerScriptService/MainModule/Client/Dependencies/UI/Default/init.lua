@@ -175,7 +175,7 @@ Library.New = function(Name)
 
 		for _,v in pairs(UI.Items) do
 			if v.UpdateSize then
-				v:UpdateSize()
+				--v:UpdateSize()
 			end
 		end
 

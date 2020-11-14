@@ -191,6 +191,12 @@ return function()
 					Shared.Network:FireServer("GetChatLogsForPlayer", Target)
 				end;
 			})
+			ButtonSection:AddItem("Button", {
+				Text = "View Clipboard Logs";
+				Function = function()
+					Shared.Network:FireServer("GetClipboardLogsForPlayer", Target)
+				end;
+			})
 
 			-- Main Stuff
 			local MainSection = Container:AddSection("Main")

@@ -266,6 +266,12 @@ return function()
 			else
 				plr.Send("Message", "This player has no admin logs.")
 			end
+		end;
+
+		GetClipboardLogsForPlayer = function(plr, target)
+			Commands.Get("clipboardlogs").Run(Service.PlayerWrapper(plr), {
+				Target = Service.PlayerWrapper(target);
+			})
 		end
 	})
 
