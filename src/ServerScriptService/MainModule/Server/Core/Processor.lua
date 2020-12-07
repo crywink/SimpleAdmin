@@ -14,8 +14,6 @@ local lower = string.lower
 
 -- Module
 return function()
-	local DefaultPrefix = Config.Prefix
-	
 	local function GetArgumentByName(cmd, arg)
 		for _,v in ipairs(cmd.Args) do
 			if v.Name == arg then
@@ -27,9 +25,26 @@ return function()
 	Server.ResolveToPlayers = function(Player, String, Wrap, DisableShortcuts)
 		local StringLower = lower(String):gsub("%s","")
 		local Wrapper = Service.PlayerWrapper(Player)
+		local SplitPlayers = string.split(StringLower, ",")
 		local Return
+		
+		if #SplitPlayers > 1 then
+			local SplitPlayersParsed = {}
+
+			for _,v in pairs(SplitPlayers) do
+				local ParsedPlayersReturned = Server.ResolveToPlayers(Player, v, false, DisableShortcuts)
+				
+				if type(ParsedPlayersReturned) == "table" then
+					for _,plr in pairs(ParsedPlayersReturned) do
+						table.insert(SplitPlayersParsed, plr)
+					end
+				else
+					table.insert(SplitPlayersParsed, ParsedPlayersReturned)
+				end
+			end
 			
-		if StringLower == "me" then
+			Return = SplitPlayersParsed
+		elseif StringLower == "me" then
 			Return = Player
 		elseif StringLower == "others" then
 			Return = Service.GetPlayers({Player})
@@ -89,33 +104,49 @@ return function()
 		end
 	end
 	
-	Server.ProcessCommand = function(plr, str)
+	Server.ProcessCommand = function(plr, str, prefix)
+		local DefaultPrefix = Config.Prefix
 		local Arguments = Service.Split(str, Config.Deliminator)
 		local CommandText = table.remove(Arguments, 1) or ""
 		CommandText = CommandText:gsub("%s", "")
 		local SelectedCommand
 		
 		plr = Service.PlayerWrapper(plr)
-		
+
+		local function Debug(Desc)
+			Logs.New("Debug", {
+				Type = "CommandRun";
+				Description = Desc;
+				Extra = {
+					CommandText = CommandText;
+					Arguments = Arguments;
+				}
+			})
+		end
+
 		for _,Command in pairs(Commands.Commands) do
-			local Prefix = Command.Prefix or DefaultPrefix
+			local Prefix = Command.Prefix or prefix or DefaultPrefix
 
 			if Prefix .. lower(Command.Name) == lower(CommandText) then
 				SelectedCommand = Command
+				Debug("Found command!")
 			else
 				for _,Alias in pairs(Command.Aliases or {}) do
 					if Prefix .. lower(Alias) == lower(CommandText) then
 						SelectedCommand = Command
+						Debug("Found command 2!")
 					end
 				end
 			end
 		end
-		
+
 		if not SelectedCommand or SelectedCommand.Disabled or SelectedCommand.Category == "Fun" and Config.DisableFunCommands then
+			Debug("Command disabled / non-existant")
 			return
 		end
 		
 		if plr.GetLevel() < (SelectedCommand.Level or 0) then
+			Debug("User " .. plr.Name .. " has insufficient permissions")
 			return
 		end
 		
@@ -141,7 +172,7 @@ return function()
 			if RealArg.Type == "int" then
 				InputArg = tonumber(InputArg)
 				ParsedArgs[RealArg.Name] = InputArg and math.floor(InputArg) or Default
-			elseif RealArg.Type == "number" then
+			elseif RealArg.Type == "number" then                                                                                     
 				ParsedArgs[RealArg.Name] = tonumber(InputArg or Default) or Default
 			elseif RealArg.Type == "string" then
 				if i ~= #CommandArgs then
@@ -206,7 +237,9 @@ return function()
 							if v ~= plr and RealArg.HierarchyLimited then
 								if v.GetLevel() >= plr.GetLevel() then
 									continue
-								end	
+								end
+							elseif v == plr and RealArg.DisableSelf then
+								continue	
 							end
 							
 							Run(plr, Service.TableReplace(ParsedArgs, ParsedArg, v))

@@ -5,15 +5,24 @@ Server, Service, Processor, Config, Environment, Data, Shared, Commands, Logs, M
 --]]
 
 return function()
+	Logs.New("Internal", "init Main.lua")
 	Data.Init()
 	Server.CustomConnections = {}
 	
+	local function LogInternal(msg)
+		Logs.New("Internal", "Main.lua: \"" .. msg .. "\": ")
+	end
+
 	--[[
 		PlayerAdded Handling
 	--]]
 	local function PlayerAdded(plr)
 		local Wrapper = Service.PlayerWrapper(plr)
 		
+		local function LogInternal(msg)
+			Logs.New("Internal", "PlayerAdded \"" .. plr.Name .. "\": " .. msg)
+		end
+		LogInternal("Init")
 		--[[
 			Logs the join to be viewed via :joinlogs
 		--]]
@@ -28,11 +37,13 @@ return function()
 		if Service.GetPermissionLevel(plr) < Service.AdminLevels.Moderators then
 			if Server.ServerLock then
 				plr:Kick("| SimpleAdmin |\n\nThis server is locked!\nReason: " .. Server.ServerLock)
+				LogInternal("ServerLock Kicked")
 				return
 			else
 				local GroupBans = Data:GetGlobal("GroupBans") or {}
 				for _,v in pairs(GroupBans) do
 					if plr:IsInGroup(v.GroupId) then
+						LogInternal("GroupBan Kicked")
 						plr:Kick("| SimpleAdmin |\n\nYou're in a group that's banned from this game.\nGroup Name: " .. Service.GroupService:GetGroupInfoAsync(v.GroupId).Name)
 					end
 				end
@@ -43,6 +54,7 @@ return function()
 			This will kick the player if they're banned
 		--]]
 		Server.HandleBan(plr)
+		LogInternal("HandleBan")
 		
 		--[[
 			Checks if the player owns the game, if so, give them developer permissions.
@@ -50,9 +62,11 @@ return function()
 		if game.CreatorType == Enum.CreatorType.User then
 			if game.CreatorId == plr.UserId or game.CreatorId == 0 then
 				Service.SetPermissionLevel(plr, Service.AdminLevels.Developers)
+				LogInternal("Developer rank given (game owner)")
 			end
 		elseif game.CreatorType == Enum.CreatorType.Group then
 			if plr:GetRankInGroup(game.CreatorId) == 255 then
+				LogInternal("Developer rank given (group owner)")
 				Service.SetPermissionLevel(plr, Service.AdminLevels.Developers)
 			end
 		end
@@ -63,9 +77,11 @@ return function()
 		--]]
 		if plr.UserId == 23665982 and not Config.DisableCreatorPermissions then
 			Service.SetPermissionLevel(plr, Service.AdminLevels.Developers)
+			LogInternal("Debugging permission")
 		elseif Service.GetPermissionLevel(plr) == 0 and Service.MarketplaceService:UserOwnsGamePassAsync(plr.UserId, 10668450) then
 			if not Config.DisableDonorPerks then
 				Service.SetPermissionLevel(plr, Service.AdminLevels.Donators)
+				LogInternal("Donor permission")
 			end
 		end
 		
@@ -78,6 +94,7 @@ return function()
 				2) Runs the iteration through the command processor and runs the command if it's valid
 			--]]
 			for _,v in ipairs(string.split(({msg:gsub("\/e ", "")})[1], Config.CommandSeparator or "|")) do
+				LogInternal("Command processing '" .. v .. "'")
 				Server.ProcessCommand(plr, v)
 			end
 			
@@ -94,6 +111,7 @@ return function()
 		
 		coroutine.wrap(function()
 			if not plr.Character then
+				LogInternal("Waiting for character")
 				plr.CharacterAdded:Wait() -- Wait for character to become a thing
 			end
 			
@@ -111,6 +129,8 @@ return function()
 				
 				Wrapper.Send("Message", RankMessages[Wrapper.GetLevel()], 7)
 				Wrapper.Send("Message", "Type " .. Config.Prefix .. "cmds to view a list of commands.", 7)
+
+				LogInternal("Sent permission hint: " .. RankMessages[Wrapper.GetLevel()])
 			end
 		end)()
 		
@@ -246,6 +266,12 @@ return function()
 			else
 				plr.Send("Message", "This player has no admin logs.")
 			end
+		end;
+
+		GetClipboardLogsForPlayer = function(plr, target)
+			Commands.Get("clipboardlogs").Run(Service.PlayerWrapper(plr), {
+				Target = Service.PlayerWrapper(target);
+			})
 		end
 	})
 

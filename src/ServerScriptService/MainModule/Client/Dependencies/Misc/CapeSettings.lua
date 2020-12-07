@@ -62,7 +62,7 @@ CapeSettings.Create = function()
 		Text = "Transparency";
 		OnChanged = function(self, progress)
 			for _,v in ipairs(self.Values) do
-				v.Text = Service.RoundTo(progress, 2)
+				v.Text = Service.RoundTo(progress, 2) 
 			end
 		end,
 		OnEnded = function(self, progress)

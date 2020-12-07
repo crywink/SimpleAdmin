@@ -16,6 +16,7 @@ return function()
 			Name = "speed";
 			Aliases = {"s"};
 			Level = Levels.Moderators;
+			Flags = {"MANAGE_CHARACTERS"};
 			Disabled = false; -- Optional
 			Category = "Utility"; -- Optional; Default: Misc
 			Args = {
@@ -36,6 +37,7 @@ return function()
 		{
 			Name = "kill";
 			Aliases = {"death"};
+			Flags = {"MANAGE_CHARACTERS"};
 			Level = Levels.Moderators;
 			Args = {
 				{
@@ -50,6 +52,7 @@ return function()
 		{
 			Name = "Commands";
 			Aliases = {"cmds"};
+			Flags = {"VIEW_COMMANDS"};
 			Level = 0;
 			Args = {};
 			Category = "Core";
@@ -75,11 +78,13 @@ return function()
 		{
 			Name = "Kick";
 			Aliases = {"yeet"};
+			Flags = {"KICK_PLAYERS"};
 			Level = Levels.Moderators;
 			Args = {
 				{
 					Name = "Target";
 					Type = "player";
+					DisableSelf = true;
 					HierarchyLimited = true;
 				},
 				{
@@ -100,11 +105,47 @@ return function()
 		{
 			Name = "Changelog";
 			Aliases = {"updates","changelogs"};
+			Flags = {"GUEST"};
 			Level = 0;
 			Args = {};
 			Category = "Core";
 			Run = function(plr, args)
 				plr.Send("DisplayTable", "Changelog", {
+					{
+						"Update 1.7.0";
+						"! Fixed ping not showing accurately";
+						"! :Ban now server bans - to ban permanently, use :pban.";
+						"! Limited logs to 500 queries - additional queries will be sliced.";
+						"! Added default radius (15) to :crowd";
+						"+ Search button is now functional";
+						"+ Added UI resizing";
+						"+ Added :groupban / :ungroupban / :groupbans";
+						"+ Added :pban";
+						"- Removed pascal converter";
+					},
+					{
+						"Update 1.6.0 Alpha";
+						"+ Added 'PlayerData' command";
+						"+ Added 'AddStat' command (adds a leaderstat)";
+						"+ Added 'UnCrowd' command (pushes people away from you)";
+						"+ Added 'RemoveHats' command";
+						"+ Added 'PlayerChatLogs' command (shows chatlogs for certain player) ('playerchatlogs', 'pclogs', 'pchatlogs')";
+						"+ Added 'PlayerLogs' command (shows admin logs for certain player) ('playerlogs', 'plogs')";
+						"+ Added 'HandTo' command (hands whatever tool you're holding to target)";
+						"+ Added PlayerWrapper.Created";
+						"+ Added SetText method to Text UI class";
+						"- Removed AntiNameSpoofing (Roblox patched it themselves)";
+						"! Fixed some processor issues";
+						"! Fixed ServerLock";
+					},
+					{
+						"Update 1.5.7 Alpha";
+						"! Fixed :shutdown";
+					},
+					{
+						"Update 1.5.6 Alpha";
+						"! Fixed the weird issue with like 90% of the commands just not working at all... I have no clue what was wrong, but for some reason ipairs was just not going through every indice. (possibly a luau issue)";
+					},
 					{
 						"Update 1.5.5 Alpha";
 						"+ Added ':handto <target>' - Hands whatever tool you're holding to <target>.";
@@ -297,6 +338,7 @@ return function()
 		{
 			Name = "admins";
 			Aliases = {"adminlist", "staff"};
+			Flags = {"VIEW_STAFF"};
 			Level = Levels.Moderators;
 			Args = {};
 			Category = "Core";
@@ -321,6 +363,7 @@ return function()
 		{
 			Name = "mod";
 			Aliases = {"givemod"};
+			Flags = {"MANAGE_ROLES"};
 			Level = Levels.Admins;
 			Args = {
 				{
@@ -341,6 +384,7 @@ return function()
 		{
 			Name = "tempmod";
 			Aliases = {"tmod"};
+			Flags = {"MANAGE_ROLES"};
 			Level = Levels.Admins;
 			Category = "Core";
 			Args = {
@@ -361,6 +405,7 @@ return function()
 		{
 			Name = "admin";
 			Aliases = {"giveadmin"};
+			Flags = {"MANAGE_ROLES"};
 			Level = Levels.Owners;
 			Category = "Core";
 			Args = {
@@ -382,6 +427,7 @@ return function()
 		{
 			Name = "owner";
 			Aliases = {"giveowner"};
+			Flags = {"MANAGE_ROLES"};
 			Level = Levels.Developers;
 			Category = "Core";
 			Args = {
@@ -403,6 +449,7 @@ return function()
 		{
 			Name = "troll";
 			Aliases = {};
+			Flags = {"MANAGE_GAME"};
 			Level = Levels.Admins;
 			Category = "Fun";
 			Args = {
@@ -420,27 +467,27 @@ return function()
 		{
 			Name = "unmod";
 			Aliases = {"unadmin", "unowner", "removeadmin"};
+			Flags = {"MANAGE_ROLES"};
 			Level = Levels.Admins;
 			Category = "Core";
 			Args = {
 				{
 					Name = "Target";
 					Type = "player";
+					HierarchyLimited = true;
 				}
 			};
 			Category = "Core";
 			Run = function(plr, args)
-				if args.Target.GetLevel() >= plr.GetLevel() then
-					return
-				end
-				
-				args.Target.Send("Message", "Your permissions have been revoked!", 5)
 				Service.SetPermissionLevel(args.Target._Object, 0, true)
+				plr.Send("Message", "You removed " .. args.Target.Name .. "'s permissions.'", 5)
+				args.Target.Send("Message", "Your permissions have been revoked!", 5)
 			end
 		},
 		{
 			Name = "rejoin";
 			Aliases = {};
+			Flags = {"GUEST"};
 			Level = 0;
 			Args = {};
 			Run = function(plr, args)
@@ -450,6 +497,7 @@ return function()
 		{
 			Name = "permban";
 			Aliases = {"pban","gameban","databan"};
+			Flags = {"BAN_PLAYERS"};
 			Level = Levels.Moderators;
 			Category = "Moderation";
 			Args = {
@@ -491,12 +539,15 @@ return function()
 		{
 			Name = "ban";
 			Aliases = {"serverban"};
+			Flags = {"BAN_PLAYERS"};
 			Level = Levels.Moderators;
 			Category = "Moderation";
 			Args = {
 				{
 					Name = "Target";
 					Type = "player";
+					DisableSelf = true;
+					DisableShortcuts = true;
 				},
 				{
 					Name = "Reason";
@@ -514,6 +565,7 @@ return function()
 		{
 			Name = "unban";
 			Aliases = {};
+			Flags = {"BAN_PLAYERS"};
 			Level = Levels.Moderators;
 			Category = "Moderation";
 			Args = {
@@ -550,6 +602,7 @@ return function()
 		{
 			Name = "bans";
 			Aliases = {"banlist", "getbans"};
+			Flags = {"BAN_PLAYERS", "VIEW_BANS"};
 			Level = Levels.Moderators;
 			Args = {};
 			Category = "Moderation";
@@ -585,6 +638,7 @@ return function()
 		{
 			Name = "logs";
 			Aliases = {"modlogs"};
+			Flags = {"VIEW_LOGS"};
 			Level = Levels.Moderators;
 			Category = "Core";
 			Args = {};
@@ -600,6 +654,7 @@ return function()
 		{
 			Name = "chatlogs";
 			Aliases = {"clogs"};
+			Flags = {"VIEW_LOGS"};
 			Level = Levels.Moderators;
 			Category = "Core";
 			Args = {};
@@ -617,6 +672,7 @@ return function()
 		{
 			Name = "noclip";
 			Aliases = {};
+			Flags = {"MANAGE_CHARACTERS"};
 			Level = Levels.Moderators;
 			Args = {
 				{
@@ -631,6 +687,7 @@ return function()
 		{
 			Name = "clip";
 			Aliases = {"unnoclip"};
+			Flags = {"MANAGE_CHARACTERS"};
 			Level = Levels.Moderators;
 			Args = {
 				{
@@ -645,6 +702,7 @@ return function()
 		{
 			Name = "fly";
 			Aliases = {};
+			Flags = {"MANAGE_CHARACTERS"};
 			Level = Levels.Moderators;
 			Args = {
 				{
@@ -659,6 +717,7 @@ return function()
 		{
 			Name = "unfly";
 			Aliases = {};
+			Flags = {"MANAGE_CHARACTERS"};
 			Level = Levels.Moderators;
 			Args = {
 				{
@@ -673,6 +732,7 @@ return function()
 		{
 			Name = "message";
 			Aliases = {"msg", "m"};
+			Flags = {"BROADCAST_MESSAGES"};
 			Level = Levels.Moderators;
 			Args = {
 				{
@@ -708,6 +768,7 @@ return function()
 		{
 			Name = "countdown";
 			Aliases = {"timer", "cd"};
+			Flags = {"BROADCAST_MESSAGES"};
 			Level = Levels.Moderators;
 			Category = "Utility";
 			Args = {
@@ -728,6 +789,7 @@ return function()
 		{
 			Name = "bring";
 			Aliases = {};
+			Flags = {"MANAGE_CHARACTERS"};
 			Level = Levels.Moderators;
 			Category = "Utility";
 			Args = {
@@ -750,6 +812,7 @@ return function()
 		{
 			Name = "to";
 			Aliases = {"goto"};
+			Flags = {"MANAGE_CHARACTERS"};
 			Level = Levels.Moderators;
 			Category = "Utility";
 			Args = {
@@ -772,6 +835,7 @@ return function()
 		{
 			Name = "tp";
 			Aliases = {"teleport"};
+			Flags = {"MANAGE_CHARACTERS"};
 			Level = Levels.Moderators;
 			Category = "Utility";
 			Args = {
@@ -798,6 +862,7 @@ return function()
 		{
 			Name = "team";
 			Aliases = {"setteam"};
+			Flags = {"CHANGE_TEAMS"};
 			Level = Levels.Moderators;
 			Category = "Utility";
 			Args = {
@@ -818,6 +883,7 @@ return function()
 		{
 			Name = "respawn";
 			Aliases = {"re"};
+			Flags = {"MANAGE_CHARACTERS"};
 			Level = Levels.Moderators;
 			Args = {
 				{
@@ -832,6 +898,7 @@ return function()
 		{
 			Name = "jumppower";
 			Aliases = {"jp"};
+			Flags = {"MANAGE_CHARACTERS"};
 			Level = Levels.Moderators;
 			Category = "Utility";
 			Args = {
@@ -852,6 +919,7 @@ return function()
 		{
 			Name = "forcefield";
 			Aliases = {"ff"};
+			Flags = {"MANAGE_CHARACTERS"};
 			Level = Levels.Moderators;
 			Args = {
 				{
@@ -871,6 +939,7 @@ return function()
 		{
 			Name = "unforcefield";
 			Aliases = {"unff"};
+			Flags = {"MANAGE_CHARACTERS"};
 			Level = Levels.Moderators;
 			Args = {
 				{
@@ -892,6 +961,7 @@ return function()
 		{
 			Name = "setstat";
 			Aliases = {"setleaderstat"};
+			Flags = {"MODIFY_PLAYER_INSTANCE"};
 			Level = Levels.Moderators;
 			Args = {
 				{
@@ -922,6 +992,7 @@ return function()
 		{
 			Name = "spy";
 			Aliases = {"view", "watch"};
+			Flags = {"MANAGE_CHARACTERS"};
 			Level = Levels.Moderators;
 			Args = {
 				{
@@ -936,11 +1007,13 @@ return function()
 		{
 			Name = "mute";
 			Aliases = {"shutup"};
+			Flags = {"MUTE_PLAYERS"};
 			Level = Levels.Moderators;
 			Args = {
 				{
 					Name = "Target";
 					Type = "player";
+					DisableSelf = true;
 				}
 			};
 			Run = function(plr, args)
@@ -950,6 +1023,7 @@ return function()
 		{
 			Name = "unmute";
 			Aliases = {"unshutup"};
+			Flags = {"MUTE_PLAYERS"};
 			Level = Levels.Moderators;
 			Args = {
 				{
@@ -964,6 +1038,7 @@ return function()
 		{
 			Name = "Tools";
 			Aliases = {};
+			Flags = {"MANAGE_BACKPACK"};
 			Level = Levels.Moderators;
 			Args = {};
 			Run = function(plr, args)
@@ -988,6 +1063,7 @@ return function()
 		{
 			Name = "Give";
 			Aliases = {};
+			Flags = {"MANAGE_BACKPACK"};
 			Level = Levels.Moderators;
 			Args = {
 				{
@@ -1020,6 +1096,7 @@ return function()
 		{
 			Name = "Ghost";
 			Level = Levels.Donators;
+			Flags = {"MANAGE_CHARACTERS", "DONATOR_PERKS"};
 			Aliases = {"makemeaghost"};
 			Category = "Donators";
 			Args = {
@@ -1039,6 +1116,7 @@ return function()
 		{
 			Name = "Unghost";
 			Level = Levels.Donators;
+			Flags = {"MANAGE_CHARACTERS", "DONATOR_PERKS"};
 			Aliases = {"makemenotaghost"};
 			Category = "Donators";
 			Args = {
@@ -1058,6 +1136,7 @@ return function()
 		{
 			Name = "Cape";
 			Level = Levels.Donators;
+			Flags = {"MANAGE_CHARACTERS", "DONATOR_PERKS"};
 			Aliases = {};
 			Args = {};
 			Category = "Donators";
@@ -1068,6 +1147,7 @@ return function()
 		{
 			Name = "Panel";
 			Level = 0;
+			Flags = {"GUEST"};
 			Aliases = {};
 			Prefix = "!";
 			Args = {};
@@ -1078,6 +1158,7 @@ return function()
 		{
 			Name = "Warn";
 			Level = Levels.Moderators;
+			Flags = {"WARN_PLAYERS"};
 			Aliases = {};
 			Args = {
 				{
@@ -1118,6 +1199,7 @@ return function()
 		{
 			Name = "Warnings";
 			Level = Levels.Moderators;
+			Flags = {"WARN_PLAYERS"};
 			Aliases = {"warns", "viewwarns"};
 			Args = {
 				{
@@ -1149,6 +1231,7 @@ return function()
 		{
 			Name = "ClearWarns";
 			Level = Levels.Moderators;
+			Flags = {"WARN_PLAYERS"};
 			Args = {
 				{
 					Name = "Target";
@@ -1163,6 +1246,7 @@ return function()
 		{
 			Name = "RemoveWarning";
 			Aliases = {"delwarn", "removewarn"};
+			Flags = {"WARN_PLAYERS"};
 			Level = Levels.Moderators;
 			Args = {
 				{
@@ -1190,6 +1274,7 @@ return function()
 		{
 			Name = "Shutdown";
 			Level = Levels.Admins;
+			Flags = {"MANAGE_GAME", "SHUTDOWN_GAME"};
 			Args = {};
 			Category = "Utility";
 			Run = function(plr, args)
@@ -1199,6 +1284,7 @@ return function()
 		{
 			Name = "setwaypoint";
 			Level = Levels.Moderators;
+			Flags = {"MANAGE_WAYPOINTS"};
 			Aliases = {"setwp"};
 			Args = {
 				{
@@ -1222,6 +1308,7 @@ return function()
 		{
 			Name = "Waypoint";
 			Level = Levels.Moderators;
+			Flags = {"MANAGE_WAYPOINTS"};
 			Aliases = {"towaypoint", "twp"};
 			Args = {
 				{
@@ -1247,6 +1334,7 @@ return function()
 		{
 			Name = "RemoveWaypoint";
 			Aliases = {"delwaypoint", "delwp"};
+			Flags = {"MANAGE_WAYPOINTS"};
 			Level = Levels.Moderators;
 			Args = {
 				{
@@ -1271,6 +1359,7 @@ return function()
 		{
 			Name = "Waypoints";
 			Level = Levels.Moderators;
+			Flags = {"MANAGE_WAYPOINTS"};
 			Args = {};
 			Run = function(plr, args)
 				if not Server.Waypoints or Service.GetLength(Server.Waypoints) == 0 then
@@ -1289,6 +1378,7 @@ return function()
 		{
 			Name = "Heal";
 			Level = Levels.Moderators;
+			Flags = {"MANAGE_CHARACTERS"};
 			Args = {
 				{
 					Name = "Target";
@@ -1306,6 +1396,7 @@ return function()
 		{
 			Name = "ServerLock";
 			Level = Levels.Moderators;
+			Flags = {"LOCK_SERVER"};
 			Aliases = {"slock"};
 			Args = {
 				{
@@ -1327,6 +1418,7 @@ return function()
 		{
 			Name = "UnServerLock";
 			Level = Levels.Moderators;
+			Flags = {"LOCK_SERVER"};
 			Aliases = {"unslock"};
 			Args = {};
 			Run = function(plr, args)
@@ -1342,7 +1434,8 @@ return function()
 		{
 			Name = "ViewTools";
 			Level = Levels.Moderators;
-			Aliases = {"toollist"};
+			Flags = {"MANAGE_BACKPACK"};
+			Aliases = {"toollist", "viewbackpack"};
 			Args = {
 				{
 					Name = "Target";
@@ -1362,6 +1455,7 @@ return function()
 		{
 			Name = "Refresh";
 			Level = Levels.Moderators;
+			Flags = {"MANAGE_CHARACTERS"};
 			Aliases = {"ref"};
 			Args = {
 				{
@@ -1392,6 +1486,7 @@ return function()
 		{
 			Name = "JoinLogs";
 			Level = Levels.Moderators;
+			Flags = {"VIEW_LOGS"};
 			Category = "Utility";
 			Args = {};
 			Aliases = {"jlogs"};
@@ -1409,6 +1504,7 @@ return function()
 		{
 			Name = "commandinfo";
 			Level = 0;
+			Flags = {"GUEST"};
 			Category = "Core";
 			Aliases = {"cmdinfo", "getinfo"};
 			Args = {
@@ -1452,6 +1548,7 @@ return function()
 		{
 			Name = "PlaySound";
 			Level = Levels.Moderators;
+			Flags = {"PLAY_SOUND"};
 			Category = "Music";
 			Aliases = {"ps", "play"};
 			Args = {
@@ -1483,6 +1580,7 @@ return function()
 		{
 			Name = "PauseSound";
 			Level = Levels.Moderators;
+			Flags = {"MANAGE_SOUNDS"};
 			Category = "Music";
 			Aliases = {"pause"};
 			Run = function(plr, args)
@@ -1493,6 +1591,7 @@ return function()
 		{
 			Name = "ResumeSound";
 			Level = Levels.Moderators;
+			Flags = {"MANAGE_SOUNDS"};
 			Category = "Music";
 			Aliases = {"resume"};
 			Run = function(plr, args)
@@ -1503,6 +1602,7 @@ return function()
 		{
 			Name = "SkipSound";
 			Level = Levels.Moderators;
+			Flags = {"MANAGE_SOUNDS"};
 			Category = "Music";
 			Aliases = {"skip"};
 			Run = function(plr, args)
@@ -1516,6 +1616,7 @@ return function()
 		{
 			Name = "SetPitch";
 			Level = Levels.Moderators;
+			Flags = {"MANAGE_SOUNDS"};
 			Category = "Music";
 			Args = {
 				{
@@ -1531,6 +1632,7 @@ return function()
 		{
 			Name = "HandTo";
 			Level = Levels.Moderators;
+			Flags = {"MANAGE_BACKPACK"};
 			Category = "Utility";
 			Args = {
 				{
@@ -1554,6 +1656,7 @@ return function()
 		{
 			Name = "RemoveHats";
 			Level = Levels.Moderators;
+			Flags = {"MANAGE_CHARACTERS"};
 			Category = "Utility";
 			Args = {
 				{
@@ -1576,6 +1679,7 @@ return function()
 		{
 			Name = "UnCrowd";
 			Aliases = {"decrowd", "pushaway"};
+			Flags = {"MANAGE_CHARACTERS"};
 			Level = Levels.Moderators;
 			Category = "Utility";
 			Args = {
@@ -1607,8 +1711,41 @@ return function()
 			end
 		},
 		{
+			Name = "Crowd";
+			Aliases = {"BringRadius"};
+			Level = Levels.Moderators;
+			Flags = {"MANAGE_CHARACTERS"};
+			Category = "Utility";
+			Args = {
+				{
+					Name = "Target";
+					Type = "player";
+				},
+				{
+					Name = "Radius";
+					Type = "int";
+					Default = 15;
+				}
+			};
+			Run = function(plr, args)
+				if plr == args.Target or not args.Target.Character or not plr.Character then
+					return
+				end
+
+				local Char = plr.Character	
+				local CharCF = Char:GetPrimaryPartCFrame()
+				
+				local TargetChar = args.Target.Character
+				local TargetCharCF = TargetChar:GetPrimaryPartCFrame()
+
+				local EndPos = (TargetCharCF.Position - CharCF.Position).Unit * args.Radius
+				TargetChar:SetPrimaryPartCFrame(CFrame.new(EndPos.X, TargetCharCF.Y, EndPos.Z))
+			end
+		},
+		{
 			Name = "AddStat";
 			Aliases = {"newstat"};
+			Flags = {"MODIFY_PLAYER_INSTANCE"};
 			Level = Levels.Moderators;
 			Args = {
 				{
@@ -1645,6 +1782,7 @@ return function()
 		{
 			Name = "playerdata";
 			Level = Levels.Moderators;
+			Flags = {"VIEW_PLAYER_DATA"};
 			Args = {
 				{
 					Name = "Target";
@@ -1659,6 +1797,7 @@ return function()
 		{
 			Name = "PlayerChatLogs";
 			Level = Levels.Moderators;
+			Flags = {"VIEW_LOGS"};
 			Aliases = {"pclogs", "pchatlogs"};
 			Args = {
 				{
@@ -1687,6 +1826,7 @@ return function()
 		{
 			Name = "PlayerLogs";
 			Aliases = {"plogs"};
+			Flags = {"VIEW_LOGS"};
 			Level = Levels.Moderators;
 			Args = {
 				{
@@ -1713,6 +1853,7 @@ return function()
 		{
 			Name = "groupban";
 			Aliases = {"gban"};
+			Flags = {"MANAGE_GROUP_BANS"};
 			Level = Levels.Admins;
 			Args = {
 				{
@@ -1756,6 +1897,7 @@ return function()
 		{
 			Name = "ungroupban";
 			Aliases = {"ungban"};
+			Flags = {"MANAGE_GROUP_BANS"};
 			Level = Levels.Admins;
 			Args = {
 				{
@@ -1791,6 +1933,7 @@ return function()
 		{
 			Name = "groupbans";
 			Level = Levels.Moderators;
+			Flags = {"MANAGE_GROUP_BANS"};
 			Category = "Moderation";
 			Run = function(plr, args)
 				local GroupBans = Data:GetGlobal("GroupBans") or {}
@@ -1816,6 +1959,14 @@ return function()
 				else
 					plr.Send("Message", "You have no groups banned from this game.")
 				end
+			end
+		},
+		{
+			Name = "internallogs";
+			Level = Levels.Developers;
+			Flags = {"MANAGE_GAME"};
+			Run = function(plr, args)
+				plr.Send("DisplayTable", "Internal Logs", Logs.Get("Internal"))
 			end
 		}
 	}
