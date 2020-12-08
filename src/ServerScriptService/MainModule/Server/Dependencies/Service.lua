@@ -205,14 +205,16 @@ end
 
 Service.SetPermissionLevel = function(plr, level, save)
 	Environment.Apply()
-	
+	local User = (type(plr) == "number" or type(plr) == "string") and Service.ResolveToUserId(plr) or plr
+
 	if save then
 		local GlobalData = Data:GetGlobal("Permissions")
-		GlobalData[tostring(plr.UserId)] = level
+		GlobalData[tostring(User.UserId)] = level
 		Data:SetGlobal("Permissions", GlobalData)
 	end
-	
-	Service.Permissions[plr.UserId] = level
+
+	Service.Permissions[User.UserId] = level
+	Service.Permissions[tostring(User.UserId)] = level
 end
 
 Service.IsValidSoundId = function(SoundId)

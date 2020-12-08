@@ -378,6 +378,7 @@ return function()
 				end
 				
 				args.Target.Send("Message", "You're a moderator!", 5)
+				plr.Send("Message", "You made " .. args.Target.Name .. " a moderator.", 5)
 				Service.SetPermissionLevel(args.Target, 2, true)
 			end
 		},
@@ -399,6 +400,7 @@ return function()
 				end
 				
 				args.Target.Send("Message", "You're a temporary moderator!", 5)
+				plr.Send("Message", "You made " .. args.Target.Name .. " a temporary moderator.", 5)
 				Service.SetPermissionLevel(args.Target, 2, false)
 			end
 		},
@@ -421,6 +423,7 @@ return function()
 				end
 				
 				args.Target.Send("Message", "You're an admin!", 5)
+				plr.Send("Message", "You made " .. args.Target.Name .. " an admin.", 5)
 				Service.SetPermissionLevel(args.Target, 3, true)
 			end
 		},
@@ -443,6 +446,7 @@ return function()
 				end
 				
 				args.Target.Send("Message", "You're an owner!", 5)
+				plr.Send("Message", "You made " .. args.Target.Name .. " an owner.", 5)
 				Service.SetPermissionLevel(args.Target, 4, true)
 			end
 		},
@@ -473,15 +477,35 @@ return function()
 			Args = {
 				{
 					Name = "Target";
-					Type = "player";
-					HierarchyLimited = true;
+					Type = "string";
 				}
 			};
 			Category = "Core";
 			Run = function(plr, args)
-				Service.SetPermissionLevel(args.Target._Object, 0, true)
-				plr.Send("Message", "You removed " .. args.Target.Name .. "'s permissions.'", 5)
-				args.Target.Send("Message", "Your permissions have been revoked!", 5)
+				local Target = Server.ResolveToPlayers(plr, args.Target, true, false)								
+
+				if Target then
+					for _,v in pairs(Target) do
+						if v.GetLevel() >= plr.GetLevel() then
+							return plr.Send("Message", "This user has the same or higher permission level.", 3)
+						end
+
+						Service.SetPermissionLevel(v.UserId, 0, true)
+
+						plr.Send("Message", "You removed " .. v.Name .. "'s admin permissions.", 3)
+						v.Send("Message", "Your permissions have been revoked!", 5)
+					end
+				else
+					local PlayerInfo = Service.ResolveToUserId(args.Target)
+					local PermissionLevel = Service.GetGlobalPermissionLevel(PlayerInfo.UserId)
+					
+					if PermissionLevel and PermissionLevel >= plr.GetLevel() then
+						return plr.Send("Message", "This user has the same or higher permission level.", 3)
+					end
+					
+					Service.SetPermissionLevel(PlayerInfo.UserId, 0, true)
+					plr.Send("Message", "You removed " .. PlayerInfo.Username .. "'s admin permissions.", 3)
+				end	
 			end
 		},
 		{
