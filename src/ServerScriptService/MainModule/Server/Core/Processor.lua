@@ -201,6 +201,17 @@ return function()
 				end
 				
 				ParsedArgs[RealArg.Name] = EnumItem or Default or EnumType:GetEnumItems()[1]
+			elseif RealArg.Type == "option" or RealArg.Type == "selection" then
+				local Options = RealArg.TypeModifier:gsub(" ", ""):split(",")
+				local Choice
+
+				for j, Option in ipairs(Options) do
+					if lower(InputArg) == lower(Option):sub(1, #InputArg) or (tonumber(InputArg) and tonumber(InputArg) == j) then
+						Choice = Option
+					end
+				end
+				
+				ParsedArgs[RealArg.Name] = Choice or Default
 			end
 		end
 		
