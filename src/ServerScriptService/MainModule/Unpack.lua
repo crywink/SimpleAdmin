@@ -66,6 +66,7 @@ return function(Config)
 		elseif Directory == Shared then
 			local Network = require(Directory:WaitForChild("Network"))
 			Environment.DefaultEnvironment.Shared.Network = Network
+			Environment.DefaultEnvironment.Shared.Event = require(Directory:WaitForChild("Event"))
 			Environment.Apply(Network.Init)()
 		end
 	end
