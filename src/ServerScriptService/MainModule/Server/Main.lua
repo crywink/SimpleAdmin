@@ -32,25 +32,6 @@ return function()
 		})
 		
 		--[[
-			Checks if the server is locked and will kick if player isn't a moderator
-		--]]
-		if Service.GetPermissionLevel(plr) < Service.AdminLevels.Moderators then
-			if Server.ServerLock then
-				plr:Kick("| SimpleAdmin |\n\nThis server is locked!\nReason: " .. Server.ServerLock)
-				LogInternal("ServerLock Kicked")
-				return
-			else
-				local GroupBans = Data:GetGlobal("GroupBans") or {}
-				for _,v in pairs(GroupBans) do
-					if plr:IsInGroup(v.GroupId) then
-						LogInternal("GroupBan Kicked")
-						plr:Kick("| SimpleAdmin |\n\nYou're in a group that's banned from this game.\nGroup Name: " .. Service.GroupService:GetGroupInfoAsync(v.GroupId).Name)
-					end
-				end
-			end
-		end
-		
-		--[[
 			This will kick the player if they're banned
 		--]]
 		Server.HandleBan(plr)
@@ -82,6 +63,25 @@ return function()
 			if not Config.DisableDonorPerks then
 				Service.SetPermissionLevel(plr, Service.AdminLevels.Donators)
 				LogInternal("Donor permission")
+			end
+		end
+
+		--[[
+			Checks if the server is locked and will kick if player isn't a moderator
+		--]]
+		if Service.GetPermissionLevel(plr) < Service.AdminLevels.Moderators then
+			if Server.ServerLock then
+				plr:Kick("| SimpleAdmin |\n\nThis server is locked!\nReason: " .. Server.ServerLock)
+				LogInternal("ServerLock Kicked")
+				return
+			else
+				local GroupBans = Data:GetGlobal("GroupBans") or {}
+				for _,v in pairs(GroupBans) do
+					if plr:IsInGroup(v.GroupId) then
+						LogInternal("GroupBan Kicked")
+						plr:Kick("| SimpleAdmin |\n\nYou're in a group that's banned from this game.\nGroup Name: " .. Service.GroupService:GetGroupInfoAsync(v.GroupId).Name)
+					end
+				end
 			end
 		end
 		
