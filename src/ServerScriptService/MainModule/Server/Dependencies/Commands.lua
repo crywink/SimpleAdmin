@@ -1026,8 +1026,19 @@ return function()
 			};
 			Run = function(plr, args)
 				plr.Send("SetCameraSubject", args.Target.Character.Humanoid)
+				plr.Send("Message", "You are spectating " .. args.Target.Name .. ".", 4)
 			end
 		},
+		{
+			Name = "unspy";
+			Aliases = {"unwatch", "unview"};
+			Flags = {"MANAGE_CHARACTERS"};
+			Level = Levels.Moderators;
+			Args = {};
+			Run = function(plr, args)
+				plr.Send("SetCameraSubject", plr.Character.Humanoid)
+			end
+		}
 		{
 			Name = "mute";
 			Aliases = {"shutup"};
@@ -1042,6 +1053,8 @@ return function()
 			};
 			Run = function(plr, args)
 				args.Target.Send("SetCoreGuiEnabled", Enum.CoreGuiType.Chat, false)
+				args.Target.Send("Message", "You have been muted by " .. plr.Name .. ".")
+				plr.Send("Message", "You have muted " .. args.Target.Name .. ".")
 			end
 		},
 		{
@@ -1057,6 +1070,8 @@ return function()
 			};
 			Run = function(plr, args)
 				args.Target.Send("SetCoreGuiEnabled", Enum.CoreGuiType.Chat, true)
+				args.Target.Send("Message", "You have been unmuted.")
+				plr.Send("You have unmuted " .. args.Target.Name .. ".")
 			end
 		},
 		{
