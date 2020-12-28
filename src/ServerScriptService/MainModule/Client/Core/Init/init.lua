@@ -49,6 +49,19 @@ return function()
 		end
 	end
 	
+	Core.ChildAdded:Connect(function(v)
+		if  v ~= script and v:IsA("ModuleScript") then
+		    local mod = require(v)
+		    if type(mod) == "function" then
+			Environment.Apply(mod)()
+		    elseif type(mod) == "table" then
+			if mod.Init then
+			    Environment.Apply(mod.Init)()
+			end
+		    end
+		end
+    	end)
+	
 	local Main = require(SimpleAdmin:WaitForChild("Main"))
 	Environment.Apply(Main)()
 end
