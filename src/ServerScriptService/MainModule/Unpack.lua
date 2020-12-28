@@ -24,6 +24,8 @@ return function(Config)
 	end
 	Client.Parent = game:GetService("StarterPlayer").StarterPlayerScripts
 	Shared.Parent = game:GetService("ReplicatedStorage")
+	Shared.Name = "SimpleAdmin_Shared"
+	
 	Environment.DefaultEnvironment.Config = Config
 
 	for _,v in pairs(Packages:WaitForChild("Client"):GetChildren()) do
