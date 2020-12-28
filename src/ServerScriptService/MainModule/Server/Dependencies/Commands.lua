@@ -1038,7 +1038,7 @@ return function()
 			Run = function(plr, args)
 				plr.Send("SetCameraSubject", plr.Character.Humanoid)
 			end
-		}
+		},
 		{
 			Name = "mute";
 			Aliases = {"shutup"};
@@ -1071,7 +1071,7 @@ return function()
 			Run = function(plr, args)
 				args.Target.Send("SetCoreGuiEnabled", Enum.CoreGuiType.Chat, true)
 				args.Target.Send("Message", "You have been unmuted.")
-				plr.Send("You have unmuted " .. args.Target.Name .. ".")
+				plr.Send("Message", "You have unmuted " .. args.Target.Name .. ".")
 			end
 		},
 		{

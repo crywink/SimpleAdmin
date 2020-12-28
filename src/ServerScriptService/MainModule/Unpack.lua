@@ -25,19 +25,13 @@ return function(Config)
 	Client.Parent = game:GetService("StarterPlayer").StarterPlayerScripts
 	Shared.Parent = game:GetService("ReplicatedStorage")
 	Environment.DefaultEnvironment.Config = Config
-	
-	for _,v in pairs(Packages:WaitForChild("Server"):GetChildren()) do
-		if v:IsA("ModuleScript") then
-			v.Parent = Server.Core
-		end
-	end
-	
+
 	for _,v in pairs(Packages:WaitForChild("Client"):GetChildren()) do
 		if v:IsA("ModuleScript") then
 			v.Parent = Client.Core
 		end
 	end
-	
+
 	for _,Directory in pairs({Shared,Server,Client}) do
 		if Directory == Server then
 			local Dependencies = Directory:WaitForChild("Dependencies")
@@ -68,6 +62,17 @@ return function(Config)
 			Environment.DefaultEnvironment.Shared.Network = Network
 			Environment.DefaultEnvironment.Shared.Event = require(Directory:WaitForChild("Event"))
 			Environment.Apply(Network.Init)()
+		end
+	end
+
+	for _,v in pairs(Packages:WaitForChild("Server"):GetChildren()) do
+		if v:IsA("ModuleScript") then
+			v.Parent = Server.Core
+
+			local Mod = require(v)
+			if Mod and type(Mod) == "function" then
+				Environment.Apply(Mod)()
+			end
 		end
 	end
 	
