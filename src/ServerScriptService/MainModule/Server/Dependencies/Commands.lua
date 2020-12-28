@@ -2033,6 +2033,6 @@ return function()
 	Commands.Create = function(Data)
 		table.insert(Commands.Commands, Data)
 	end
-	
+
 	return Commands
-end 
+end
