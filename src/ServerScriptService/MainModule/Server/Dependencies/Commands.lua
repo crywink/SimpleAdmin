@@ -2007,6 +2007,33 @@ return function()
 			Run = function(plr, args)
 				plr.Send("DisplayTable", "Internal Logs", Logs.Get("Internal"))
 			end
+		},
+		{
+			Name = "displayname";
+			Aliases = {"name", "setname", "setdisplayname"};
+			Level = Levels.Moderators;
+			Flags = {"MANAGE_CHARACTERS"};
+			Args = {
+				{
+					Name = "Target";
+					Type = "player";
+				},
+				{
+					Name = "Name";
+					Type = "string";
+				}
+			};
+			Run = function(plr, args)
+				local Character = args.Target.Character
+				if Character then
+					Character.Humanoid.DisplayName = args.Name or args.Target.Name
+				end
+				
+				args.Target.Send("Message", "Your display name has been set to \"" .. Character.Humanoid.DisplayName .. "\"")
+				if args.Target ~= plr then
+					plr.Send("Message", "You have set " .. args.Target.Name .. "'s display name to \"" .. Character.Humanoid.DisplayName .. "\"")
+				end
+			end
 		}
 	}
 	
