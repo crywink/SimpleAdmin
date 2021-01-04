@@ -2034,6 +2034,90 @@ return function()
 					plr.Send("Message", "You have set " .. args.Target.Name .. "'s display name to \"" .. Character.Humanoid.DisplayName .. "\"")
 				end
 			end
+		},
+		{
+			Name = "addtag";
+			Aliases = {};
+			Level = Levels.Moderators;
+			PermissionNodes = {"MANAGE_GAME"};
+			Args = {
+				{
+					Name = "Target";
+					Type = "player";
+				},
+				{
+					Name = "Tag";
+					Type = "string";
+				}
+			};
+			Run = function(plr, args)
+				if not args.Target.Temp.Tags then
+					args.Target.Temp.Tags = {}
+				end
+				args.Tag = string.lower(args.Tag)
+
+				local PlayerTags = args.Target.Temp.Tags
+				PlayerTags[args.Tag] = true
+
+				plr.Send("Message", "You have added the '" .. args.Tag .. "' tag to " .. args.Target.Name .. ".")
+			end
+		},
+		{
+			Name = "removetag";
+			Aliases = {"deltag"};
+			Level = Levels.Moderators;
+			PermissionNodes = {"MANAGE_GAME"};
+			Args = {
+				{
+					Name = "Target";
+					Type = "player";
+				},
+				{
+					Name = "Tag";
+					Type = "string";
+				}
+			};
+			Run = function(plr, args)
+				if not args.Target.Temp.Tags then
+					args.Target.Temp.Tags = {}
+				end
+				args.Tag = string.lower(args.Tag)
+
+				local PlayerTags = args.Target.Temp.Tags
+				
+				if PlayerTags[args.Tag] then
+					PlayerTags[args.Tag] = nil
+					plr.Send("Message", "You have removed the \"" .. args.Tag .. "\" tag from " .. args.Target.Name .. ".")
+				else
+					plr.Send("Message", "This player does not have the \"" .. args.Tag .. "\" tag.")
+				end
+			end
+		},
+		{
+			Name = "viewtags";
+			Aliases = {};
+			Level = Levels.Moderators;
+			PermissionNodes = {"MANAGE_GAME"};
+			Args = {};
+			Run = function(plr, args)
+				local TableToDisplay = {}
+
+				for _,v in ipairs(Service.GetPlayers({}, true)) do
+					local Tags = v.Temp.Tags
+
+					if Tags then
+						for Tag, _ in pairs(Tags) do
+							if not TableToDisplay[Tag] then
+								TableToDisplay[Tag] = {}
+							end
+
+							table.insert(TableToDisplay[Tag], v.Name .. " (" .. v.UserId .. ")")
+						end
+					end
+				end
+
+				plr.Send("DisplayTable", "Tags", TableToDisplay)
+			end
 		}
 	}
 	

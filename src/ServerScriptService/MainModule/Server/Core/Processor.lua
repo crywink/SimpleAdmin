@@ -60,6 +60,8 @@ return function()
 			if Team then
 				Return = Team:GetPlayers()
 			end
+		elseif StringLower:sub(1,1) == "@" then
+			return Service.GetPlayersWithTag(string.match(StringLower, "@(.*)"))
 		elseif StringLower:sub(1,1) == "-" then
 			local Distance = tonumber(StringLower:match("%d+"))
 			local Character = Player.Character
