@@ -16,7 +16,7 @@ return function()
 			Name = "speed";
 			Aliases = {"s"};
 			Level = Levels.Moderators;
-			Flags = {"MANAGE_CHARACTERS"};
+			PermissionNodes = {"MANAGE_CHARACTERS"};
 			Disabled = false; -- Optional
 			Category = "Utility"; -- Optional; Default: Misc
 			Args = {
@@ -37,7 +37,7 @@ return function()
 		{
 			Name = "kill";
 			Aliases = {"death"};
-			Flags = {"MANAGE_CHARACTERS"};
+			PermissionNodes = {"MANAGE_CHARACTERS"};
 			Level = Levels.Moderators;
 			Args = {
 				{
@@ -52,7 +52,7 @@ return function()
 		{
 			Name = "Commands";
 			Aliases = {"cmds"};
-			Flags = {"VIEW_COMMANDS"};
+			PermissionNodes = {"VIEW_COMMANDS"};
 			Level = 0;
 			Args = {};
 			Category = "Core";
@@ -78,7 +78,7 @@ return function()
 		{
 			Name = "Kick";
 			Aliases = {"yeet"};
-			Flags = {"KICK_PLAYERS"};
+			PermissionNodes = {"KICK_PLAYERS"};
 			Level = Levels.Moderators;
 			Args = {
 				{
@@ -105,7 +105,7 @@ return function()
 		{
 			Name = "Changelog";
 			Aliases = {"updates","changelogs"};
-			Flags = {"GUEST"};
+			PermissionNodes = {"GUEST"};
 			Level = 0;
 			Args = {};
 			Category = "Core";
@@ -338,7 +338,7 @@ return function()
 		{
 			Name = "admins";
 			Aliases = {"adminlist", "staff"};
-			Flags = {"VIEW_STAFF"};
+			PermissionNodes = {"VIEW_STAFF"};
 			Level = Levels.Moderators;
 			Args = {};
 			Category = "Core";
@@ -363,7 +363,7 @@ return function()
 		{
 			Name = "mod";
 			Aliases = {"givemod"};
-			Flags = {"MANAGE_ROLES"};
+			PermissionNodes = {"MANAGE_ROLES"};
 			Level = Levels.Admins;
 			Args = {
 				{
@@ -385,7 +385,7 @@ return function()
 		{
 			Name = "tempmod";
 			Aliases = {"tmod"};
-			Flags = {"MANAGE_ROLES"};
+			PermissionNodes = {"MANAGE_ROLES"};
 			Level = Levels.Admins;
 			Category = "Core";
 			Args = {
@@ -407,7 +407,7 @@ return function()
 		{
 			Name = "admin";
 			Aliases = {"giveadmin"};
-			Flags = {"MANAGE_ROLES"};
+			PermissionNodes = {"MANAGE_ROLES"};
 			Level = Levels.Owners;
 			Category = "Core";
 			Args = {
@@ -430,7 +430,7 @@ return function()
 		{
 			Name = "owner";
 			Aliases = {"giveowner"};
-			Flags = {"MANAGE_ROLES"};
+			PermissionNodes = {"MANAGE_ROLES"};
 			Level = Levels.Developers;
 			Category = "Core";
 			Args = {
@@ -453,7 +453,7 @@ return function()
 		{
 			Name = "troll";
 			Aliases = {};
-			Flags = {"MANAGE_GAME"};
+			PermissionNodes = {"MANAGE_GAME"};
 			Level = Levels.Admins;
 			Category = "Fun";
 			Args = {
@@ -471,7 +471,7 @@ return function()
 		{
 			Name = "unmod";
 			Aliases = {"unadmin", "unowner", "removeadmin"};
-			Flags = {"MANAGE_ROLES"};
+			PermissionNodes = {"MANAGE_ROLES"};
 			Level = Levels.Admins;
 			Category = "Core";
 			Args = {
@@ -511,7 +511,7 @@ return function()
 		{
 			Name = "rejoin";
 			Aliases = {};
-			Flags = {"GUEST"};
+			PermissionNodes = {"GUEST"};
 			Level = 0;
 			Args = {};
 			Run = function(plr, args)
@@ -521,7 +521,7 @@ return function()
 		{
 			Name = "permban";
 			Aliases = {"pban","gameban","databan"};
-			Flags = {"BAN_PLAYERS"};
+			PermissionNodes = {"BAN_PLAYERS"};
 			Level = Levels.Moderators;
 			Category = "Moderation";
 			Args = {
@@ -563,7 +563,7 @@ return function()
 		{
 			Name = "ban";
 			Aliases = {"serverban"};
-			Flags = {"BAN_PLAYERS"};
+			PermissionNodes = {"BAN_PLAYERS"};
 			Level = Levels.Moderators;
 			Category = "Moderation";
 			Args = {
@@ -589,7 +589,7 @@ return function()
 		{
 			Name = "unban";
 			Aliases = {};
-			Flags = {"BAN_PLAYERS"};
+			PermissionNodes = {"BAN_PLAYERS"};
 			Level = Levels.Moderators;
 			Category = "Moderation";
 			Args = {
@@ -626,7 +626,7 @@ return function()
 		{
 			Name = "bans";
 			Aliases = {"banlist", "getbans"};
-			Flags = {"BAN_PLAYERS", "VIEW_BANS"};
+			PermissionNodes = {"BAN_PLAYERS", "VIEW_BANS"};
 			Level = Levels.Moderators;
 			Args = {};
 			Category = "Moderation";
@@ -662,7 +662,7 @@ return function()
 		{
 			Name = "logs";
 			Aliases = {"modlogs"};
-			Flags = {"VIEW_LOGS"};
+			PermissionNodes = {"VIEW_LOGS"};
 			Level = Levels.Moderators;
 			Category = "Core";
 			Args = {};
@@ -678,7 +678,7 @@ return function()
 		{
 			Name = "chatlogs";
 			Aliases = {"clogs"};
-			Flags = {"VIEW_LOGS"};
+			PermissionNodes = {"VIEW_LOGS"};
 			Level = Levels.Moderators;
 			Category = "Core";
 			Args = {};
@@ -696,7 +696,7 @@ return function()
 		{
 			Name = "noclip";
 			Aliases = {};
-			Flags = {"MANAGE_CHARACTERS"};
+			PermissionNodes = {"MANAGE_CHARACTERS"};
 			Level = Levels.Moderators;
 			Args = {
 				{
@@ -711,7 +711,7 @@ return function()
 		{
 			Name = "clip";
 			Aliases = {"unnoclip"};
-			Flags = {"MANAGE_CHARACTERS"};
+			PermissionNodes = {"MANAGE_CHARACTERS"};
 			Level = Levels.Moderators;
 			Args = {
 				{
@@ -726,7 +726,7 @@ return function()
 		{
 			Name = "fly";
 			Aliases = {};
-			Flags = {"MANAGE_CHARACTERS"};
+			PermissionNodes = {"MANAGE_CHARACTERS"};
 			Level = Levels.Moderators;
 			Args = {
 				{
@@ -741,7 +741,7 @@ return function()
 		{
 			Name = "unfly";
 			Aliases = {};
-			Flags = {"MANAGE_CHARACTERS"};
+			PermissionNodes = {"MANAGE_CHARACTERS"};
 			Level = Levels.Moderators;
 			Args = {
 				{
@@ -756,7 +756,7 @@ return function()
 		{
 			Name = "message";
 			Aliases = {"msg", "m"};
-			Flags = {"BROADCAST_MESSAGES"};
+			PermissionNodes = {"BROADCAST_MESSAGES"};
 			Level = Levels.Moderators;
 			Args = {
 				{
@@ -792,7 +792,7 @@ return function()
 		{
 			Name = "countdown";
 			Aliases = {"timer", "cd"};
-			Flags = {"BROADCAST_MESSAGES"};
+			PermissionNodes = {"BROADCAST_MESSAGES"};
 			Level = Levels.Moderators;
 			Category = "Utility";
 			Args = {
@@ -813,7 +813,7 @@ return function()
 		{
 			Name = "bring";
 			Aliases = {};
-			Flags = {"MANAGE_CHARACTERS"};
+			PermissionNodes = {"MANAGE_CHARACTERS"};
 			Level = Levels.Moderators;
 			Category = "Utility";
 			Args = {
@@ -836,7 +836,7 @@ return function()
 		{
 			Name = "to";
 			Aliases = {"goto"};
-			Flags = {"MANAGE_CHARACTERS"};
+			PermissionNodes = {"MANAGE_CHARACTERS"};
 			Level = Levels.Moderators;
 			Category = "Utility";
 			Args = {
@@ -859,7 +859,7 @@ return function()
 		{
 			Name = "tp";
 			Aliases = {"teleport"};
-			Flags = {"MANAGE_CHARACTERS"};
+			PermissionNodes = {"MANAGE_CHARACTERS"};
 			Level = Levels.Moderators;
 			Category = "Utility";
 			Args = {
@@ -886,7 +886,7 @@ return function()
 		{
 			Name = "team";
 			Aliases = {"setteam"};
-			Flags = {"CHANGE_TEAMS"};
+			PermissionNodes = {"CHANGE_TEAMS"};
 			Level = Levels.Moderators;
 			Category = "Utility";
 			Args = {
@@ -907,7 +907,7 @@ return function()
 		{
 			Name = "respawn";
 			Aliases = {"re"};
-			Flags = {"MANAGE_CHARACTERS"};
+			PermissionNodes = {"MANAGE_CHARACTERS"};
 			Level = Levels.Moderators;
 			Args = {
 				{
@@ -922,7 +922,7 @@ return function()
 		{
 			Name = "jumppower";
 			Aliases = {"jp"};
-			Flags = {"MANAGE_CHARACTERS"};
+			PermissionNodes = {"MANAGE_CHARACTERS"};
 			Level = Levels.Moderators;
 			Category = "Utility";
 			Args = {
@@ -943,7 +943,7 @@ return function()
 		{
 			Name = "forcefield";
 			Aliases = {"ff"};
-			Flags = {"MANAGE_CHARACTERS"};
+			PermissionNodes = {"MANAGE_CHARACTERS"};
 			Level = Levels.Moderators;
 			Args = {
 				{
@@ -963,7 +963,7 @@ return function()
 		{
 			Name = "unforcefield";
 			Aliases = {"unff"};
-			Flags = {"MANAGE_CHARACTERS"};
+			PermissionNodes = {"MANAGE_CHARACTERS"};
 			Level = Levels.Moderators;
 			Args = {
 				{
@@ -985,7 +985,7 @@ return function()
 		{
 			Name = "setstat";
 			Aliases = {"setleaderstat"};
-			Flags = {"MODIFY_PLAYER_INSTANCE"};
+			PermissionNodes = {"MODIFY_PLAYER_INSTANCE"};
 			Level = Levels.Moderators;
 			Args = {
 				{
@@ -1016,7 +1016,7 @@ return function()
 		{
 			Name = "spy";
 			Aliases = {"view", "watch"};
-			Flags = {"MANAGE_CHARACTERS"};
+			PermissionNodes = {"MANAGE_CHARACTERS"};
 			Level = Levels.Moderators;
 			Args = {
 				{
@@ -1032,7 +1032,7 @@ return function()
 		{
 			Name = "unspy";
 			Aliases = {"unwatch", "unview"};
-			Flags = {"MANAGE_CHARACTERS"};
+			PermissionNodes = {"MANAGE_CHARACTERS"};
 			Level = Levels.Moderators;
 			Args = {};
 			Run = function(plr, args)
@@ -1042,7 +1042,7 @@ return function()
 		{
 			Name = "mute";
 			Aliases = {"shutup"};
-			Flags = {"MUTE_PLAYERS"};
+			PermissionNodes = {"MUTE_PLAYERS"};
 			Level = Levels.Moderators;
 			Args = {
 				{
@@ -1060,7 +1060,7 @@ return function()
 		{
 			Name = "unmute";
 			Aliases = {"unshutup"};
-			Flags = {"MUTE_PLAYERS"};
+			PermissionNodes = {"MUTE_PLAYERS"};
 			Level = Levels.Moderators;
 			Args = {
 				{
@@ -1077,7 +1077,7 @@ return function()
 		{
 			Name = "Tools";
 			Aliases = {};
-			Flags = {"MANAGE_BACKPACK"};
+			PermissionNodes = {"MANAGE_BACKPACK"};
 			Level = Levels.Moderators;
 			Args = {};
 			Run = function(plr, args)
@@ -1102,7 +1102,7 @@ return function()
 		{
 			Name = "Give";
 			Aliases = {};
-			Flags = {"MANAGE_BACKPACK"};
+			PermissionNodes = {"MANAGE_BACKPACK"};
 			Level = Levels.Moderators;
 			Args = {
 				{
@@ -1135,7 +1135,7 @@ return function()
 		{
 			Name = "Ghost";
 			Level = Levels.Donators;
-			Flags = {"MANAGE_CHARACTERS", "DONATOR_PERKS"};
+			PermissionNodes = {"MANAGE_CHARACTERS", "DONATOR_PERKS"};
 			Aliases = {"makemeaghost"};
 			Category = "Donators";
 			Args = {
@@ -1155,7 +1155,7 @@ return function()
 		{
 			Name = "Unghost";
 			Level = Levels.Donators;
-			Flags = {"MANAGE_CHARACTERS", "DONATOR_PERKS"};
+			PermissionNodes = {"MANAGE_CHARACTERS", "DONATOR_PERKS"};
 			Aliases = {"makemenotaghost"};
 			Category = "Donators";
 			Args = {
@@ -1175,7 +1175,7 @@ return function()
 		{
 			Name = "Cape";
 			Level = Levels.Donators;
-			Flags = {"MANAGE_CHARACTERS", "DONATOR_PERKS"};
+			PermissionNodes = {"MANAGE_CHARACTERS", "DONATOR_PERKS"};
 			Aliases = {};
 			Args = {};
 			Category = "Donators";
@@ -1186,7 +1186,7 @@ return function()
 		{
 			Name = "Panel";
 			Level = 0;
-			Flags = {"GUEST"};
+			PermissionNodes = {"GUEST"};
 			Aliases = {};
 			Prefix = "!";
 			Args = {};
@@ -1197,7 +1197,7 @@ return function()
 		{
 			Name = "Warn";
 			Level = Levels.Moderators;
-			Flags = {"WARN_PLAYERS"};
+			PermissionNodes = {"WARN_PLAYERS"};
 			Aliases = {};
 			Args = {
 				{
@@ -1238,7 +1238,7 @@ return function()
 		{
 			Name = "Warnings";
 			Level = Levels.Moderators;
-			Flags = {"WARN_PLAYERS"};
+			PermissionNodes = {"WARN_PLAYERS"};
 			Aliases = {"warns", "viewwarns"};
 			Args = {
 				{
@@ -1270,7 +1270,7 @@ return function()
 		{
 			Name = "ClearWarns";
 			Level = Levels.Moderators;
-			Flags = {"WARN_PLAYERS"};
+			PermissionNodes = {"WARN_PLAYERS"};
 			Args = {
 				{
 					Name = "Target";
@@ -1285,7 +1285,7 @@ return function()
 		{
 			Name = "RemoveWarning";
 			Aliases = {"delwarn", "removewarn"};
-			Flags = {"WARN_PLAYERS"};
+			PermissionNodes = {"WARN_PLAYERS"};
 			Level = Levels.Moderators;
 			Args = {
 				{
@@ -1313,7 +1313,7 @@ return function()
 		{
 			Name = "Shutdown";
 			Level = Levels.Admins;
-			Flags = {"MANAGE_GAME", "SHUTDOWN_GAME"};
+			PermissionNodes = {"MANAGE_GAME", "SHUTDOWN_GAME"};
 			Args = {};
 			Category = "Utility";
 			Run = function(plr, args)
@@ -1323,7 +1323,7 @@ return function()
 		{
 			Name = "setwaypoint";
 			Level = Levels.Moderators;
-			Flags = {"MANAGE_WAYPOINTS"};
+			PermissionNodes = {"MANAGE_WAYPOINTS"};
 			Aliases = {"setwp"};
 			Args = {
 				{
@@ -1347,7 +1347,7 @@ return function()
 		{
 			Name = "Waypoint";
 			Level = Levels.Moderators;
-			Flags = {"MANAGE_WAYPOINTS"};
+			PermissionNodes = {"MANAGE_WAYPOINTS"};
 			Aliases = {"towaypoint", "twp"};
 			Args = {
 				{
@@ -1373,7 +1373,7 @@ return function()
 		{
 			Name = "RemoveWaypoint";
 			Aliases = {"delwaypoint", "delwp"};
-			Flags = {"MANAGE_WAYPOINTS"};
+			PermissionNodes = {"MANAGE_WAYPOINTS"};
 			Level = Levels.Moderators;
 			Args = {
 				{
@@ -1398,7 +1398,7 @@ return function()
 		{
 			Name = "Waypoints";
 			Level = Levels.Moderators;
-			Flags = {"MANAGE_WAYPOINTS"};
+			PermissionNodes = {"MANAGE_WAYPOINTS"};
 			Args = {};
 			Run = function(plr, args)
 				if not Server.Waypoints or Service.GetLength(Server.Waypoints) == 0 then
@@ -1417,7 +1417,7 @@ return function()
 		{
 			Name = "Heal";
 			Level = Levels.Moderators;
-			Flags = {"MANAGE_CHARACTERS"};
+			PermissionNodes = {"MANAGE_CHARACTERS"};
 			Args = {
 				{
 					Name = "Target";
@@ -1435,7 +1435,7 @@ return function()
 		{
 			Name = "ServerLock";
 			Level = Levels.Moderators;
-			Flags = {"LOCK_SERVER"};
+			PermissionNodes = {"LOCK_SERVER"};
 			Aliases = {"slock"};
 			Args = {
 				{
@@ -1457,7 +1457,7 @@ return function()
 		{
 			Name = "UnServerLock";
 			Level = Levels.Moderators;
-			Flags = {"LOCK_SERVER"};
+			PermissionNodes = {"LOCK_SERVER"};
 			Aliases = {"unslock"};
 			Args = {};
 			Run = function(plr, args)
@@ -1473,7 +1473,7 @@ return function()
 		{
 			Name = "ViewTools";
 			Level = Levels.Moderators;
-			Flags = {"MANAGE_BACKPACK"};
+			PermissionNodes = {"MANAGE_BACKPACK"};
 			Aliases = {"toollist", "viewbackpack"};
 			Args = {
 				{
@@ -1494,7 +1494,7 @@ return function()
 		{
 			Name = "Refresh";
 			Level = Levels.Moderators;
-			Flags = {"MANAGE_CHARACTERS"};
+			PermissionNodes = {"MANAGE_CHARACTERS"};
 			Aliases = {"ref"};
 			Args = {
 				{
@@ -1525,7 +1525,7 @@ return function()
 		{
 			Name = "JoinLogs";
 			Level = Levels.Moderators;
-			Flags = {"VIEW_LOGS"};
+			PermissionNodes = {"VIEW_LOGS"};
 			Category = "Utility";
 			Args = {};
 			Aliases = {"jlogs"};
@@ -1543,7 +1543,7 @@ return function()
 		{
 			Name = "commandinfo";
 			Level = 0;
-			Flags = {"GUEST"};
+			PermissionNodes = {"GUEST"};
 			Category = "Core";
 			Aliases = {"cmdinfo", "getinfo"};
 			Args = {
@@ -1587,7 +1587,7 @@ return function()
 		{
 			Name = "PlaySound";
 			Level = Levels.Moderators;
-			Flags = {"PLAY_SOUND"};
+			PermissionNodes = {"PLAY_SOUND"};
 			Category = "Music";
 			Aliases = {"ps", "play"};
 			Args = {
@@ -1619,7 +1619,7 @@ return function()
 		{
 			Name = "PauseSound";
 			Level = Levels.Moderators;
-			Flags = {"MANAGE_SOUNDS"};
+			PermissionNodes = {"MANAGE_SOUNDS"};
 			Category = "Music";
 			Aliases = {"pause"};
 			Run = function(plr, args)
@@ -1630,7 +1630,7 @@ return function()
 		{
 			Name = "ResumeSound";
 			Level = Levels.Moderators;
-			Flags = {"MANAGE_SOUNDS"};
+			PermissionNodes = {"MANAGE_SOUNDS"};
 			Category = "Music";
 			Aliases = {"resume"};
 			Run = function(plr, args)
@@ -1641,7 +1641,7 @@ return function()
 		{
 			Name = "SkipSound";
 			Level = Levels.Moderators;
-			Flags = {"MANAGE_SOUNDS"};
+			PermissionNodes = {"MANAGE_SOUNDS"};
 			Category = "Music";
 			Aliases = {"skip"};
 			Run = function(plr, args)
@@ -1655,7 +1655,7 @@ return function()
 		{
 			Name = "SetPitch";
 			Level = Levels.Moderators;
-			Flags = {"MANAGE_SOUNDS"};
+			PermissionNodes = {"MANAGE_SOUNDS"};
 			Category = "Music";
 			Args = {
 				{
@@ -1671,7 +1671,7 @@ return function()
 		{
 			Name = "HandTo";
 			Level = Levels.Moderators;
-			Flags = {"MANAGE_BACKPACK"};
+			PermissionNodes = {"MANAGE_BACKPACK"};
 			Category = "Utility";
 			Args = {
 				{
@@ -1695,7 +1695,7 @@ return function()
 		{
 			Name = "RemoveHats";
 			Level = Levels.Moderators;
-			Flags = {"MANAGE_CHARACTERS"};
+			PermissionNodes = {"MANAGE_CHARACTERS"};
 			Category = "Utility";
 			Args = {
 				{
@@ -1718,7 +1718,7 @@ return function()
 		{
 			Name = "UnCrowd";
 			Aliases = {"decrowd", "pushaway"};
-			Flags = {"MANAGE_CHARACTERS"};
+			PermissionNodes = {"MANAGE_CHARACTERS"};
 			Level = Levels.Moderators;
 			Category = "Utility";
 			Args = {
@@ -1753,7 +1753,7 @@ return function()
 			Name = "Crowd";
 			Aliases = {"BringRadius"};
 			Level = Levels.Moderators;
-			Flags = {"MANAGE_CHARACTERS"};
+			PermissionNodes = {"MANAGE_CHARACTERS"};
 			Category = "Utility";
 			Args = {
 				{
@@ -1784,7 +1784,7 @@ return function()
 		{
 			Name = "AddStat";
 			Aliases = {"newstat"};
-			Flags = {"MODIFY_PLAYER_INSTANCE"};
+			PermissionNodes = {"MODIFY_PLAYER_INSTANCE"};
 			Level = Levels.Moderators;
 			Args = {
 				{
@@ -1821,7 +1821,7 @@ return function()
 		{
 			Name = "playerdata";
 			Level = Levels.Moderators;
-			Flags = {"VIEW_PLAYER_DATA"};
+			PermissionNodes = {"VIEW_PLAYER_DATA"};
 			Args = {
 				{
 					Name = "Target";
@@ -1836,7 +1836,7 @@ return function()
 		{
 			Name = "PlayerChatLogs";
 			Level = Levels.Moderators;
-			Flags = {"VIEW_LOGS"};
+			PermissionNodes = {"VIEW_LOGS"};
 			Aliases = {"pclogs", "pchatlogs"};
 			Args = {
 				{
@@ -1865,7 +1865,7 @@ return function()
 		{
 			Name = "PlayerLogs";
 			Aliases = {"plogs"};
-			Flags = {"VIEW_LOGS"};
+			PermissionNodes = {"VIEW_LOGS"};
 			Level = Levels.Moderators;
 			Args = {
 				{
@@ -1892,7 +1892,7 @@ return function()
 		{
 			Name = "groupban";
 			Aliases = {"gban"};
-			Flags = {"MANAGE_GROUP_BANS"};
+			PermissionNodes = {"MANAGE_GROUP_BANS"};
 			Level = Levels.Admins;
 			Args = {
 				{
@@ -1936,7 +1936,7 @@ return function()
 		{
 			Name = "ungroupban";
 			Aliases = {"ungban"};
-			Flags = {"MANAGE_GROUP_BANS"};
+			PermissionNodes = {"MANAGE_GROUP_BANS"};
 			Level = Levels.Admins;
 			Args = {
 				{
@@ -1972,7 +1972,7 @@ return function()
 		{
 			Name = "groupbans";
 			Level = Levels.Moderators;
-			Flags = {"MANAGE_GROUP_BANS"};
+			PermissionNodes = {"MANAGE_GROUP_BANS"};
 			Category = "Moderation";
 			Run = function(plr, args)
 				local GroupBans = Data:GetGlobal("GroupBans") or {}
@@ -2003,7 +2003,7 @@ return function()
 		{
 			Name = "internallogs";
 			Level = Levels.Developers;
-			Flags = {"MANAGE_GAME"};
+			PermissionNodes = {"MANAGE_GAME"};
 			Run = function(plr, args)
 				plr.Send("DisplayTable", "Internal Logs", Logs.Get("Internal"))
 			end
@@ -2012,7 +2012,7 @@ return function()
 			Name = "displayname";
 			Aliases = {"name", "setname", "setdisplayname"};
 			Level = Levels.Moderators;
-			Flags = {"MANAGE_CHARACTERS"};
+			PermissionNodes = {"MANAGE_CHARACTERS"};
 			Args = {
 				{
 					Name = "Target";
