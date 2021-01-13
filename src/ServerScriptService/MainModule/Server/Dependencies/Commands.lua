@@ -2036,8 +2036,8 @@ return function()
 			end
 		},
 		{
-			Name = "addtag";
-			Aliases = {};
+			Name = "tag";
+			Aliases = {"addtag"};
 			Level = Levels.Moderators;
 			PermissionNodes = {"MANAGE_GAME"};
 			Args = {
@@ -2064,7 +2064,7 @@ return function()
 		},
 		{
 			Name = "removetag";
-			Aliases = {"deltag"};
+			Aliases = {"deltag", "untag"};
 			Level = Levels.Moderators;
 			PermissionNodes = {"MANAGE_GAME"};
 			Args = {
@@ -2095,7 +2095,7 @@ return function()
 		},
 		{
 			Name = "viewtags";
-			Aliases = {};
+			Aliases = {"tags"};
 			Level = Levels.Moderators;
 			PermissionNodes = {"MANAGE_GAME"};
 			Args = {};
