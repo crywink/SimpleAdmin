@@ -11,7 +11,7 @@ return function()
 	local Environment = require(Dependencies:WaitForChild("Environment"))
 	Environment.Init()
 	Environment.Apply()
-	local _Shared = Service.ReplicatedStorage:WaitForChild("Shared")
+	local _Shared = Service.ReplicatedStorage:WaitForChild("SimpleAdmin_Shared")
 	
 	for _,v in pairs(_Shared:GetChildren()) do
 		if v:IsA("ModuleScript") then

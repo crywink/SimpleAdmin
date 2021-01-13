@@ -203,6 +203,18 @@ Service.BanUser = function(UserId, Reason, Moderator)
 	Data:SetGlobal("Bans", PreviousSave)
 end
 
+Service.GetPlayersWithTag = function(Tag)
+	local PlayersWithTag = {}
+
+	for _,v in ipairs(Service.GetPlayers({}, true)) do
+		if v.Temp.Tags and v.Temp.Tags[Tag] then
+			table.insert(PlayersWithTag, v)
+		end
+	end
+
+	return PlayersWithTag
+end
+
 Service.SetPermissionLevel = function(plr, level, save)
 	Environment.Apply()
 	local User = (type(plr) == "number" or type(plr) == "string") and Service.ResolveToUserId(plr) or plr

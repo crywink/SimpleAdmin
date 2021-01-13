@@ -26,8 +26,8 @@ Environment.Init = function()
 			if mod and type(mod) == "table" then
 				Environment.DefaultEnvironment[v.Name] = mod;
 				
-				pcall(function()
-					if mod.Init then
+				local Success, Error = pcall(function()
+					if v.Name ~= "Service" and mod.Init then
 						Environment.Apply(mod.Init)()
 					end
 				end)
