@@ -257,7 +257,7 @@ Service.FilterText = function(text, from, to)
 		end
 	end
 end
-
+print("t")
 Service.GetGlobalPermissionLevel = function(plr)
 	Environment.Apply()
 	
