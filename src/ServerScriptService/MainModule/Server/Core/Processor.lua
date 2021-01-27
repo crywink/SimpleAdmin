@@ -141,17 +141,71 @@ return function()
 				end
 			end
 		end
+		
+		if not SelectedCommand then
+			Debug("Command non-existant")
+			return
+		end
 
-		if not SelectedCommand or SelectedCommand.Disabled or SelectedCommand.Category == "Fun" and Config.DisableFunCommands then
-			Debug("Command disabled / non-existant")
-			return
+		local ParsedFlags = {};
+		for Index,InputFlag in ipairs(Arguments) do
+			if Service.StartsWith(InputFlag, Config.FlagPrefix or "--") then
+				local InputFlagName = InputFlag:match("%a.*"):lower()
+				local RealFlag = (SelectedCommand.Flags and Service.TableFind(SelectedCommand.Flags, function(Obj)
+					return Obj.Name:lower() == InputFlagName
+				end)) or Service.TableFind(GlobalFlags, function(Obj)
+					return Obj.Name:lower() == InputFlagName
+				end)
+				
+				if not RealFlag then
+					continue
+				end
+				table.remove(Arguments, Index)
+
+				local FlagArgument
+				if RealFlag.TakesArgument then
+					if Arguments[Index] then
+						FlagArgument = table.remove(Arguments, Index)
+					else
+						continue
+					end
+				end
+
+				if RealFlag.Run then
+					if RealFlag.Run(FlagArgument or true) == 0 then
+						return
+					end
+				end
+
+				ParsedFlags[RealFlag.Name] = FlagArgument or true
+			end
 		end
-		
+
+		if SelectedCommand.Disabled or SelectedCommand.Category == "Fun" and Config.DisableFunCommands then
+			if not ParsedFlags.Bypass then
+				Debug("Command disabled")
+				return
+			end
+		end
+
 		if plr.GetLevel() < (SelectedCommand.Level or 0) then
-			Debug("User " .. plr.Name .. " has insufficient permissions")
-			return
+			if ParsedFlags.Level then
+				local Level = tonumber(ParsedFlags.Level)
+
+				if not Level then
+					Debug("Malformed 'Level' flag")
+				end
+
+				if Level < (SelectedCommand.Level or 0) then
+					Debug("[BYPASS] User " .. plr.Name .. " has insufficient permissions")
+					return
+				end
+			else
+				Debug("User " .. plr.Name .. " has insufficient permissions")
+				return
+			end
 		end
-		
+
 		local ParsedArgs = {};
 		local CommandArgs = SelectedCommand.Args or SelectedCommand.Arguments or {}
 		for i = 1, #CommandArgs do
@@ -225,24 +279,24 @@ return function()
 								continue	
 							end
 							
-							Run(plr, Service.TableReplace(ParsedArgs, ParsedArg, v))
+							Run(plr, Service.TableReplace(ParsedArgs, ParsedArg, v), ParsedFlags)
 						end
 					else
-						Run(plr, Service.TableReplace(ParsedArgs, ParsedArg, SelectedPlayers))
+						Run(plr, Service.TableReplace(ParsedArgs, ParsedArg, SelectedPlayers), ParsedFlags)
 					end
 				end
 			end
 		else
-			Run(plr, ParsedArgs)
+			Run(plr, ParsedArgs, ParsedFlags)
 		end
 		
 		if SelectedCommand.RunOnce then
-			coroutine.wrap(SelectedCommand.RunOnce)(plr, ParsedArgs)
+			coroutine.wrap(SelectedCommand.RunOnce)(plr, ParsedArgs, ParsedFlags)
 		end
 		
 		coroutine.wrap(function()
 			for _,v in pairs(Server.CustomConnections.OnCommandRan or {}) do
-				v.Function(plr, str, SelectedCommand, ParsedArgs)
+				v.Function(plr, str, SelectedCommand, ParsedArgs, ParsedFlags)
 			end
 		end)()
 	end
