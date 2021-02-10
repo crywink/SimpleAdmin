@@ -60,8 +60,10 @@ return function()
 			if Team then
 				Return = Team:GetPlayers()
 			end
+		elseif StringLower:sub(1,1) == "$" then
+			Return = Service.GetPlayersWithTag(string.match(StringLower, "$(.*)"))
 		elseif StringLower:sub(1,1) == "@" then
-			return Service.GetPlayersWithTag(string.match(StringLower, "@(.*)"))
+			Return = Service.FindPlayerByDisplayName(string.match(StringLower, "@(.*)"))
 		elseif StringLower:sub(1,1) == "-" then
 			local Distance = tonumber(StringLower:match("%d+"))
 			local Character = Player.Character
@@ -148,6 +150,7 @@ return function()
 		end
 
 		local ParsedFlags = {};
+		local IndicesToRemove = {};
 		if not disableflags then
 			for Index,InputFlag in ipairs(Arguments) do
 				if Service.StartsWith(InputFlag, Config.FlagPrefix or "--") then
@@ -155,20 +158,19 @@ return function()
 					local RealFlag = (SelectedCommand.Flags and Service.TableFind(SelectedCommand.Flags, function(Obj)
 						return Obj.Name:lower() == InputFlagName
 					end)) or Service.TableFind(GlobalFlags, function(Obj)
-						print(Obj.Name:lower() == InputFlagName, Obj.Name,InputFlagName)
 						return Obj.Name:lower() == InputFlagName
 					end)
-					print(RealFlag)
-					
+
 					if not RealFlag then
 						continue
 					end
-					table.remove(Arguments, Index)
+					table.insert(IndicesToRemove, Index)
 					
 					local FlagArgument
 					if RealFlag.TakesArgument then
-						if Arguments[Index] then
-							FlagArgument = table.remove(Arguments, Index)
+						if Arguments[Index + 1] then
+							FlagArgument = Arguments[Index + 1]
+							table.insert(IndicesToRemove, Index + 1)
 						else
 							continue
 						end
@@ -188,6 +190,16 @@ return function()
 
 					ParsedFlags[RealFlag.Name] = FlagArgument or true
 				end
+			end
+		end
+
+		for k,v in ipairs(IndicesToRemove) do
+			Arguments[v] = nil
+		end
+
+		for k,v in ipairs(Arguments) do
+			if not v then
+				table.remove(Arguments, k)
 			end
 		end
 

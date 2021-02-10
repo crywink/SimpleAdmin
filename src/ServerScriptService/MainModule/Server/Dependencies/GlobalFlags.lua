@@ -10,7 +10,7 @@ return {
     {
         Name = "Delay";
         TakesArgument = true;
-        Run = function(CommandData, Time)
+        Run = function(Time)
             wait(Time)
         end
     }

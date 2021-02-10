@@ -104,6 +104,14 @@ Service.FindPlayer = function(str)
 	end
 end
 
+Service.FindPlayerByDisplayName = function(str)
+	for _,v in ipairs(Players:GetPlayers()) do
+		if Service.StartsWith(lower(v.DisplayName), lower(str)) then
+			return v
+		end
+	end
+end
+
 Service.FindTeam = function(str)
 	for _,v in ipairs(Teams:GetChildren()) do
 		if v:IsA("Team") and Service.StartsWith(lower(v.Name), lower(str)) then
