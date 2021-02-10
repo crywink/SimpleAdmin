@@ -119,18 +119,22 @@ return function()
 				Notify the player that they're an admin
 			--]]
 			if Service.GetPermissionLevel(plr) > Service.AdminLevels.Donators then
-				local RankMessages = {
+				local RankMessages = Config.RankMessages or {
 					[1] = "You're a donator!";
 					[2] = "You're a moderator!";
 					[3] = "You're an admin!";
 					[4] = "You're an owner!";
 					[5] = "You're a creator!";
 				}
-				
-				Wrapper.Send("Message", RankMessages[Wrapper.GetLevel()], 7)
-				Wrapper.Send("Message", "Type " .. Config.Prefix .. "cmds to view a list of commands.", 7)
+				local Message = RankMessages[Wrapper.GetLevel()]
 
-				LogInternal("Sent permission hint: " .. RankMessages[Wrapper.GetLevel()])
+
+				if Message then
+					Wrapper.Send("Message", RankMessages[Wrapper.GetLevel()], 7)
+					Wrapper.Send("Message", "Type " .. Config.Prefix .. "cmds to view a list of commands.", 7)
+
+					LogInternal("Sent permission hint: " .. RankMessages[Wrapper.GetLevel()])
+				end
 			end
 		end)()
 		
@@ -310,6 +314,15 @@ return function()
 			}
 		end
 	})
+
+	--[[
+		Setting up broadcasting service for global execution
+	--]]
+	local subSuccess, subConnection = pcall(function()
+		return Service.MessagingService:SubscribeAsync("SimpleAdmin_", function(Message)
+			-- useless atm
+		end)
+	end)
 
 	--[[
 		Setting up permissions [this is very tedious and im gonna reconfigure this soon so its not bAD]

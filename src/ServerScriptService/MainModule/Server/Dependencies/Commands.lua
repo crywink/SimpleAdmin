@@ -84,7 +84,6 @@ return function()
 				{
 					Name = "Target";
 					Type = "player";
-					DisableSelf = true;
 					HierarchyLimited = true;
 				},
 				{
@@ -95,11 +94,20 @@ return function()
 			};
 			Category = "Moderation";
 			Run = function(plr, args)
-				if args.Target.GetLevel() >= plr.GetLevel() then
-					return
+				local Keywords = {
+					["REASON"] = args.Reason;
+					["MODERATOR"] = plr.Name;
+					["TARGET"] = args.Target.Name;
+				}
+				local KickMessage = Config.KickMessage or "\n\nSimpleAdmin | {{REASON}}"
+
+				for Key,Value in pairs(Keywords) do
+					KickMessage = KickMessage:gsub("{{" .. Key .. "}}", function()
+						return Value
+					end)
 				end
-				
-				args.Target:Kick("\n\nSimpleAdmin | " .. args.Reason)
+
+				args.Target:Kick(KickMessage)
 			end
 		},	
 		{
@@ -111,6 +119,35 @@ return function()
 			Category = "Core";
 			Run = function(plr, args)
 				plr.Send("DisplayTable", "Changelog", {
+					{
+						"Update 1.7.4";
+						"! Fixed some UI resizing";
+						"! YOU CAN NO LONGER BAN YOURSELF";
+						"! Clipboard Logs should now function normally.";
+
+						"+ You can now unmod people that aren't in-game.";
+						"+ Added :crowd [radius] (Brings all players to you and puts them [radius] studs away from you.)";
+						"+ Added feedback hint to :unadmin";
+						"+ Added feedback hint to :mod,:tempmod,:admin,:owner";
+						"+ Added Service.BindToPlayerAdded";
+						"+ Added ability to pass UserId to Service.SetPermissionLevel";
+						"+ Added :internallogs";
+						"+ Text containers now auto-scale to text bounds.";
+						"+ You can now run commands on selected players by separating them by comma. (:kill me,alice,ulferno)";
+					},
+					{
+						"Update 1.7.3";
+						"+ Added Service.BindToPlayerAdded";
+					},
+					{
+						"Update 1.7.2";
+						"+ Added :tban (:timeban, :tempban)";
+						"! :pban no longer takes a time argument";
+					},
+					{
+						"Update 1.7.1";
+						"! Fixed :pban";
+					},
 					{
 						"Update 1.7.0";
 						"! Fixed ping not showing accurately";
@@ -581,8 +618,20 @@ return function()
 			};
 			Run = function(plr, args)
 				table.insert(Config.Bans, args.Target.UserId);
+				local Keywords = {
+					["REASON"] = args.Reason;
+					["MODERATOR"] = plr.Name;
+					["TARGET"] = args.Target.Name;
+				}
+				local KickMessage = Config.BanMessage or "\n\nSimpleAdmin | You have been banned!\nReason: {{REASON}}\nModerator: {{MODERATOR}}"
 
-				args.Target:Kick("\n| SimpleAdmin |\nYou have been banned!\nReason: " .. args.Reason)
+				for Key,Value in pairs(Keywords) do
+					KickMessage = KickMessage:gsub("{{" .. Key .. "}}", function()
+						return Value
+					end)
+				end
+
+				args.Target:Kick(KickMessage)
 				plr.Send("Message", "You have server-banned " .. args.Target.Name .. "!")
 			end
 		},
@@ -1146,9 +1195,9 @@ return function()
 			};
 			Run = function(plr, args)
 				if plr.GetLevel() == Service.AdminLevels.Donators then
-					Misc.Character.Ghostify(plr)
+					Misc.Character.SetTransparency(plr, 0.7, 1)
 				else
-					Misc.Character.Ghostify(args.Target)
+					Misc.Character.SetTransparency(args.Target, 0.7, 1)
 				end
 			end
 		},
@@ -1166,9 +1215,9 @@ return function()
 			};
 			Run = function(plr, args)
 				if plr.GetLevel() == Service.AdminLevels.Donators then
-					Misc.Character.Unghostify(plr)
+					Misc.Character.SetTransparency(plr, 0)
 				else
-					Misc.Character.Unghostify(args.Target)
+					Misc.Character.SetTransparency(args.Target, 0)
 				end
 			end
 		},
@@ -2118,7 +2167,37 @@ return function()
 
 				plr.Send("DisplayTable", "Tags", TableToDisplay)
 			end
-		}
+		},
+		{
+			Name = "Invisible";
+			Level = Levels.Donators;
+			PermissionNodes = {"MANAGE_CHARACTERS"};
+			Aliases = {"invis", "hide"};
+			Args = {
+				{
+					Name = "Target";
+					Type = "player";
+				}	
+			};
+			Run = function(plr, args)
+				Misc.Character.SetTransparency(args.Target, 1)
+			end
+		},
+		{
+			Name = "Uninvisible";
+			Level = Levels.Donators;
+			PermissionNodes = {"MANAGE_CHARACTERS"};
+			Aliases = {"visible", "show", "uninvis"};
+			Args = {
+				{
+					Name = "Target";
+					Type = "player";
+				}	
+			};
+			Run = function(plr, args)
+				Misc.Character.SetTransparency(args.Target, 0)
+			end
+		},
 	}
 	
 	Commands.Get = function(query, includeindex)

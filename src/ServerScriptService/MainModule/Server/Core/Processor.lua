@@ -1,4 +1,4 @@
-Server, Service, Config, Commands, Environment, Logs = nil, nil, nil, nil, nil, nil
+Server, Service, Config, Commands, Environment, Logs, GlobalFlags = nil, nil, nil, nil, nil, nil, nil
 
 --[[
 	SimpleAdmin | Process
@@ -106,7 +106,7 @@ return function()
 		end
 	end
 	
-	Server.ProcessCommand = function(plr, str, prefix)
+	Server.ProcessCommand = function(plr, str, prefix, disableflags)
 		local DefaultPrefix = Config.Prefix
 		local Arguments = Service.Split(str, Config.Deliminator)
 		local CommandText = table.remove(Arguments, 1) or ""
@@ -148,36 +148,46 @@ return function()
 		end
 
 		local ParsedFlags = {};
-		for Index,InputFlag in ipairs(Arguments) do
-			if Service.StartsWith(InputFlag, Config.FlagPrefix or "--") then
-				local InputFlagName = InputFlag:match("%a.*"):lower()
-				local RealFlag = (SelectedCommand.Flags and Service.TableFind(SelectedCommand.Flags, function(Obj)
-					return Obj.Name:lower() == InputFlagName
-				end)) or Service.TableFind(GlobalFlags, function(Obj)
-					return Obj.Name:lower() == InputFlagName
-				end)
-				
-				if not RealFlag then
-					continue
-				end
-				table.remove(Arguments, Index)
-
-				local FlagArgument
-				if RealFlag.TakesArgument then
-					if Arguments[Index] then
-						FlagArgument = table.remove(Arguments, Index)
-					else
+		if not disableflags then
+			for Index,InputFlag in ipairs(Arguments) do
+				if Service.StartsWith(InputFlag, Config.FlagPrefix or "--") then
+					local InputFlagName = InputFlag:match("%a.*"):lower()
+					local RealFlag = (SelectedCommand.Flags and Service.TableFind(SelectedCommand.Flags, function(Obj)
+						return Obj.Name:lower() == InputFlagName
+					end)) or Service.TableFind(GlobalFlags, function(Obj)
+						print(Obj.Name:lower() == InputFlagName, Obj.Name,InputFlagName)
+						return Obj.Name:lower() == InputFlagName
+					end)
+					print(RealFlag)
+					
+					if not RealFlag then
 						continue
 					end
-				end
-
-				if RealFlag.Run then
-					if RealFlag.Run(FlagArgument or true) == 0 then
-						return
+					table.remove(Arguments, Index)
+					
+					local FlagArgument
+					if RealFlag.TakesArgument then
+						if Arguments[Index] then
+							FlagArgument = table.remove(Arguments, Index)
+						else
+							continue
+						end
 					end
-				end
+					
+					local CommandData = {
+						Message = str;
+						Player = Service.PlayerWrapper(plr);
+					}
 
-				ParsedFlags[RealFlag.Name] = FlagArgument or true
+					if RealFlag.Run then
+						Environment.Apply(RealFlag.Run)
+						if RealFlag.Run(FlagArgument or true) == 0 then
+							return
+						end
+					end
+
+					ParsedFlags[RealFlag.Name] = FlagArgument or true
+				end
 			end
 		end
 

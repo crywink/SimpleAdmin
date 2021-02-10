@@ -116,7 +116,7 @@ Service.TableFind = function(tbl, func)
 	if type(func) == "function" then
 		for _,v in pairs(tbl) do
 			if func(v) then
-				return true
+				return v
 			end
 		end
 	else
