@@ -39,6 +39,10 @@ return function()
 			Value = "Package Developer";
 		},
 		{
+			Key = "iMaster";
+			Value = "Package Developer";
+		},
+		{
 			Key = "Sezei";
 			Value = "Package Developer";
 		},
