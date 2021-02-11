@@ -60,7 +60,11 @@ return function()
 		},
 		{
 			Key = "BPilot253";
-			Value = "Package Developer"
+			Value = "Package Developer";
+		},
+		{
+			Key = "ZEDD";
+			Value = "Package Developer";
 		}
 	}
 
