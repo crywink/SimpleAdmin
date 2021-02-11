@@ -17,7 +17,57 @@ return function()
 	local VIPDescription = MainHolder:WaitForChild("VIPDesc")
 	local CreditsPage = MainHolder:WaitForChild("Credits")
 	local DonorSettings = MainHolder:WaitForChild("DonorSettings")
-	
+	local CreditsList = {
+		{
+			Key = "crywink";
+			Value = "Creator & Lead Programmer";
+		},
+		{
+			Key = "Ulferno";
+			Value = "Lead Contributor";
+		},
+		{
+			Key = "Alice";
+			Value = "Staff Member";
+		},
+		{
+			Key = "Light";
+			Value = "Staff Member";
+		},
+		{
+			Key = "WaverlyCoal";
+			Value = "Package Developer";
+		},
+		{
+			Key = "Sezei";
+			Value = "Package Developer";
+		},
+		{
+			Key = "SimplyNoni";
+			Value = "Package Developer";
+		},
+		{
+			Key = "va1kio";
+			Value = "Package Developer";
+		},
+		{
+			Key = "aviaskip";
+			Value = "Package Developer";
+		},
+		{
+			Key = "BPilot253";
+			Value = "Package Developer"
+		}
+	}
+
+	for _,v in ipairs(CreditsList) do
+		local Card = script:WaitForChild("CreditsCard"):Clone()
+		Card.Name = v.Key
+		Card.Parent = CreditsPage.Holder
+		Card.Key.Text = v.Key
+		Card.Value.Text = v.Value
+	end
+
 	Panel.Panel.Bar.Title.close_button.MouseButton1Click:Connect(function()
 		Panel.Enabled = false
 	end)

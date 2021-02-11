@@ -104,6 +104,14 @@ Service.FindPlayer = function(str)
 	end
 end
 
+Service.FindPlayerByDisplayName = function(str)
+	for _,v in ipairs(Players:GetPlayers()) do
+		if Service.StartsWith(lower(v.DisplayName), lower(str)) then
+			return v
+		end
+	end
+end
+
 Service.FindTeam = function(str)
 	for _,v in ipairs(Teams:GetChildren()) do
 		if v:IsA("Team") and Service.StartsWith(lower(v.Name), lower(str)) then
@@ -116,7 +124,7 @@ Service.TableFind = function(tbl, func)
 	if type(func) == "function" then
 		for _,v in pairs(tbl) do
 			if func(v) then
-				return true
+				return v
 			end
 		end
 	else
@@ -257,7 +265,7 @@ Service.FilterText = function(text, from, to)
 		end
 	end
 end
-
+print("t")
 Service.GetGlobalPermissionLevel = function(plr)
 	Environment.Apply()
 	

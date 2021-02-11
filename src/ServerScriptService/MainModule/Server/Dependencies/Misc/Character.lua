@@ -63,24 +63,13 @@ Character.Capeify = function(Player, Data)
 	return Cape
 end
 
-Character.Ghostify = function(plr)
+Character.SetTransparency = function(plr, Transparency, DecalTransparency)
 	local Character = plr.Character
 	for _,v in ipairs(Character:GetDescendants()) do
 		if v:IsA("BasePart") and v.Name ~= "HumanoidRootPart" then
-			v.Transparency = .7
+			v.Transparency = Transparency
 		elseif v:IsA("Decal") then
-			v.Transparency = 1
-		end
-	end
-end
-
-Character.Unghostify = function(plr)
-	local Character = plr.Character
-	for _,v in ipairs(Character:GetDescendants()) do
-		if v:IsA("BasePart") and v.Name ~= "HumanoidRootPart" then
-			v.Transparency = 0
-		elseif v:IsA("Decal") then
-			v.Transparency = 0
+			v.Transparency = DecalTransparency or Transparency
 		end
 	end
 end
