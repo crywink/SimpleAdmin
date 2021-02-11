@@ -35,7 +35,7 @@ return function()
 			Value = "Staff Member";
 		},
 		{
-			Key = "WaverlyCoal";
+			Key = "WaverlyCole";
 			Value = "Package Developer";
 		},
 		{
