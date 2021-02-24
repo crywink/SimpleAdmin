@@ -216,7 +216,7 @@ Service.GetPlayersWithTag = function(Tag)
 
 	for _,v in ipairs(Service.GetPlayers({}, true)) do
 		if v.Temp.Tags and v.Temp.Tags[Tag] then
-			table.insert(PlayersWithTag, v)
+			table.insert(PlayersWithTag, v._Object)
 		end
 	end
 
@@ -265,7 +265,7 @@ Service.FilterText = function(text, from, to)
 		end
 	end
 end
-print("t")
+
 Service.GetGlobalPermissionLevel = function(plr)
 	Environment.Apply()
 	
