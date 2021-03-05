@@ -14,7 +14,7 @@ return function()
 	Commands.Commands = {
 		{
 			Name = "speed";
-			Aliases = {"s"};
+			Aliases = {"s", "ws", "walkspeed"};
 			Level = Levels.Moderators;
 			PermissionNodes = {"MANAGE_CHARACTERS"};
 			Disabled = false; -- Optional
