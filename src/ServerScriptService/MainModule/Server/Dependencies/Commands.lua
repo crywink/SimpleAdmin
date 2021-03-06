@@ -2184,6 +2184,48 @@ return function()
 			end
 		},
 		{
+			Name = "setmaxhealth";
+			Aliases = {"maxhp", 'setmaxhp};
+			Level = Levels.Moderators;
+			PermissionNodes = {"MANAGE_CHARACTERS"};
+			Disabled = false; -- Optional
+			Category = "Utility"; -- Optional; Default: Misc
+			Args = {
+				{
+					Name = "Target";
+					Type = "player";
+				},
+				{
+					Name = "Health";
+					Type = "int";
+				}
+			};
+			Run = function(plr, args)
+				args.Target.GetHumanoid().MaxHealth = args.Health
+				args.Target.GetHumanoid().Health = args.Health
+			end
+		},
+			Name = "sethealth";
+			Aliases = {"hp", 'sethp};
+			Level = Levels.Moderators;
+			PermissionNodes = {"MANAGE_CHARACTERS"};
+			Disabled = false; -- Optional
+			Category = "Utility"; -- Optional; Default: Misc
+			Args = {
+				{
+					Name = "Target";
+					Type = "player";
+				},
+				{
+					Name = "Health";
+					Type = "int";
+				}
+			};
+			Run = function(plr, args)
+				args.Target.GetHumanoid().Health = args.Health
+			end
+		},
+		{
 			Name = "Uninvisible";
 			Level = Levels.Donators;
 			PermissionNodes = {"MANAGE_CHARACTERS"};
