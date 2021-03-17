@@ -13,6 +13,10 @@ return function()
 		Logs.New("Internal", "Main.lua: \"" .. msg .. "\": ")
 	end
 
+	if Config.ExposeEnvironment then
+		_G.SimpleAdminEnvironment = Environment.DefaultEnvironment
+	end
+
 	--[[
 		PlayerAdded Handling
 	--]]
