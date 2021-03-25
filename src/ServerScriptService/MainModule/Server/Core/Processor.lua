@@ -259,7 +259,7 @@ return function()
 					ParsedArgs[RealArg.Name] = Arg
 				end
 			elseif RealArg.Type == "player" then
-				ParsedArgs[RealArg.Name] = InputArg and lower(InputArg) or "me"
+				ParsedArgs[RealArg.Name] = Server.ResolveToPlayers(plr._Object, InputArg and lower(InputArg) or "me", true, RealArg.DisableShortcuts)
 			end
 		end
 		
@@ -279,32 +279,56 @@ return function()
 			
 			coroutine.wrap(SelectedCommand.Run)(...)
 		end
+
+		local function SolveArgumentSet(Set)
+			Set = Service.CopyTable(Set)
+			local NewSets = {}
+
+			for Key,Arg in pairs(Set) do
+				if type(Arg) == "table" and not Arg._Object then
+					for _,ArgToClone in pairs(Arg) do
+						local NewSet = Service.CopyTable(Set)
+						NewSet[Key] = ArgToClone
+						
+						local RecurseSolve = SolveArgumentSet(NewSet)
+						if RecurseSolve then
+							for _,v in ipairs(RecurseSolve) do
+								table.insert(NewSets, v)
+							end
+						else
+							table.insert(NewSets, NewSet)
+						end
+					end
+
+					return NewSets
+				end
+			end
+
+			return {Set}
+		end
 		
 		if Service.TableFind(CommandArgs, function(arg)
-				if arg.Type == "player" then
-					return true
-				end
+				return arg.Type:lower() == "player"
 		end) then
-			for Key,ParsedArg in pairs(ParsedArgs) do
-				local RealArg = GetArgumentByName(SelectedCommand, Key)
-				
-				if RealArg.Type == "player" then
-					local SelectedPlayers = Server.ResolveToPlayers(plr._Object, ParsedArg, true, RealArg.DisableShortcuts)
-					
-					if not RealArg.ReturnTable then
-						for _,v in ipairs(SelectedPlayers or {}) do
-							if v ~= plr and RealArg.HierarchyLimited then
-								if v.GetLevel() >= plr.GetLevel() then
-									continue
+			for _, SolvedArgs in pairs(SolveArgumentSet(ParsedArgs)) do
+				for Key,ParsedArg in pairs(SolvedArgs) do
+					local RealArg = GetArgumentByName(SelectedCommand, Key)
+					if RealArg.Type == "player" then
+						if not RealArg.ReturnTable then
+							local DontRun = false
+
+							if ParsedArg ~= plr and RealArg.HierarchyLimited then
+								if ParsedArg.GetLevel() >= plr.GetLevel() then
+									DontRun = true
 								end
-							elseif v == plr and RealArg.DisableSelf then
-								continue	
+							elseif ParsedArg == plr and RealArg.DisableSelf then
+								DontRun = true
 							end
-							
-							Run(plr, Service.TableReplace(ParsedArgs, ParsedArg, v), ParsedFlags)
+
+							if not DontRun then
+								Run(plr, SolvedArgs, ParsedFlags)
+							end
 						end
-					else
-						Run(plr, Service.TableReplace(ParsedArgs, ParsedArg, SelectedPlayers), ParsedFlags)
 					end
 				end
 			end
