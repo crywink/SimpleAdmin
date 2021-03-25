@@ -242,6 +242,11 @@ return function()
 				end
 			end
 			
+			if RealArg.Type:find("<") and RealArg.Type:sub(#RealArg.Type) == ">" then
+				RealArg.TypeModifier = RealArg.Type:gmatch("<(%a+)>")()
+				RealArg.Type = RealArg.Type:gmatch("(.+)<")()
+			end
+			
 			if RealArg.Type == "int" then
 				InputArg = tonumber(InputArg)
 				ParsedArgs[RealArg.Name] = InputArg and math.floor(InputArg) or Default
@@ -260,6 +265,31 @@ return function()
 				end
 			elseif RealArg.Type == "player" then
 				ParsedArgs[RealArg.Name] = Server.ResolveToPlayers(plr._Object, InputArg and lower(InputArg) or "me", true, RealArg.DisableShortcuts)
+			elseif RealArg.Type == "enum" then
+				local EnumType = RealArg.TypeModifier:gsub(" ", "")
+				local EnumItem
+
+				for j, Item in ipairs(Enum[EnumType]:GetEnumItems()) do
+					local Elements = tostring(Item):split(".")
+					local ItemName = Elements[#Elements]
+
+					if lower(InputArg) == lower(ItemName):sub(1, #InputArg) or (tonumber(InputArg) and tonumber(InputArg) == j) then
+						EnumItem = item
+					end
+				end
+				
+				ParsedArgs[RealArg.Name] = EnumItem or Default or EnumType:GetEnumItems()[1]
+			elseif RealArg.Type == "option" or RealArg.Type == "selection" then
+				local Options = RealArg.TypeModifier:gsub(" ", ""):split(",")
+				local Choice
+
+				for j, Option in ipairs(Options) do
+					if lower(InputArg) == lower(Option):sub(1, #InputArg) or (tonumber(InputArg) and tonumber(InputArg) == j) then
+						Choice = Option
+					end
+				end
+				
+				ParsedArgs[RealArg.Name] = Choice or Default
 			end
 		end
 		
