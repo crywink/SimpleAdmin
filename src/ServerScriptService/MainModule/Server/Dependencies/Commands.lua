@@ -906,8 +906,8 @@ return function()
 			end
 		},
 		{
-			Name = "tp";
-			Aliases = {"teleport"};
+			Name = "teleport";
+			Aliases = {"tp"};
 			PermissionNodes = {"MANAGE_CHARACTERS"};
 			Level = Levels.Moderators;
 			Category = "Utility";
@@ -2198,6 +2198,77 @@ return function()
 				Misc.Character.SetTransparency(args.Target, 0)
 			end
 		},
+		{
+			Name = "StarterGive";
+			Level = Levels.Moderators;
+			PermissionNodes = {"MANAGE_BACKPACK"};
+			Aliases = {"sgive"};
+			Args = {
+				{
+					Name = "Target";
+					Type = "player";
+				},
+				{
+					Name = "Tool";
+					Type = "string";
+				}
+			};
+			Run = function(plr, args)
+				Commands.Get("give").Run(plr, args);
+
+				for _,v in ipairs(Server.Tools) do
+					if args.Tool == "all" or string.match(v.Name:lower(), args.Tool:lower()) then
+						v:Clone().Parent = args.Target.StarterGear
+					end
+				end
+			end;
+		},
+		{
+			Name = "Clone";
+			Level = Levels.Moderators;
+			PermissionNodes = {"MANAGE_CHARACTERS"};
+			Aliases = {};
+			Args = {
+				{
+					Name = "Target";
+					Type = "player";
+				}
+			};
+			Run = function(plr, args)
+				if not Server.Debris then
+					Server.Debris = {}
+				end
+
+				local Character = args.Target.Character
+				if Character then
+					Character.Archivable = true
+					local Clone = Character:Clone()
+					Character.Archivable = false
+					Clone.Parent = workspace
+
+					local CF = plr.Character:GetPrimaryPartCFrame()
+					Clone:SetPrimaryPartCFrame(CFrame.new(CF.Position + CF.LookVector * 3, CF.Position))
+
+					table.insert(Server.Debris, Clone)
+					plr.Send("Message","You cloned " .. args.Target.Name .. "!", 3)
+				end
+			end
+		},
+		{
+			Name = "Clear";
+			Level = Levels.Moderators;
+			PermissionNodes = {};
+			Aliases = {"cls", "clean"};
+			Args = {};
+			Run = function(plr, args)
+				for k,v in pairs(Server.Debris) do
+					v:Destroy()
+				end
+				Server.Debris = {}
+
+				plr.Send("Message", "You have cleared all debris.", 5)
+			end
+		}
 	}
 	
 	Commands.Get = function(query, includeindex)
