@@ -2185,11 +2185,11 @@ return function()
 		},
 		{
 			Name = "setmaxhealth";
-			Aliases = {"maxhp", 'setmaxhp};
+			Aliases = {"maxhp", 'setmaxhp'};
 			Level = Levels.Moderators;
 			PermissionNodes = {"MANAGE_CHARACTERS"};
-			Disabled = false; -- Optional
-			Category = "Utility"; -- Optional; Default: Misc
+			Disabled = false; 
+			Category = "Utility"; 
 			Args = {
 				{
 					Name = "Target";
@@ -2206,11 +2206,11 @@ return function()
 			end
 		},
 			Name = "sethealth";
-			Aliases = {"hp", 'sethp};
+			Aliases = {"hp", 'sethp'};
 			Level = Levels.Moderators;
 			PermissionNodes = {"MANAGE_CHARACTERS"};
-			Disabled = false; -- Optional
-			Category = "Utility"; -- Optional; Default: Misc
+			Disabled = false; 
+			Category = "Utility"; 
 			Args = {
 				{
 					Name = "Target";
