@@ -9,6 +9,7 @@
 -- Variables
 local SimpleAdmin = _G.SimpleAdmin
 local Packages = SimpleAdmin:WaitForChild("Packages")
+local sSettings = require(SimpleAdmin:WaitForChild("Settings"))
 local Container = script.Parent
 local Shared = Container:WaitForChild("Shared")
 local Server = Container:WaitForChild("Server")
@@ -19,6 +20,13 @@ Environment.Init()
 -- Module
 return function(Config)
 	Server.Parent = game:GetService("ServerScriptService")
+	
+	for _,v in pairs(Packages:WaitForChild("Themes"):GetChildren()) do
+		if v:IsA("ModuleScript") then
+			v.Parent = Client.Dependencies.UI
+		end
+	end
+	
 	for _,v in pairs(game:GetService("Players"):GetPlayers()) do
 		Client:Clone().Parent = v:WaitForChild("PlayerGui")
 	end
