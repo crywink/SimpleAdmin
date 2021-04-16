@@ -609,6 +609,7 @@ return function()
 					Type = "player";
 					DisableSelf = true;
 					DisableShortcuts = true;
+					HierarchyLimited = true;
 				},
 				{
 					Name = "Reason";
